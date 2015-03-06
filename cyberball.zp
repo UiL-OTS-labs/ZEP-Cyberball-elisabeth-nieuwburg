@@ -1,0 +1,201 @@
+/******************************************************************************\
+FILE:           cyberball.zp
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+EXPERIMENT:	Cyberball experiment. The participant throws balls to and receives
+* throws from three computer-controled players. After a while the computer-controled players
+* will start to ignore a pre-set player.
+* 
+* Features selectable baseball gloves, graphics for throwing and some sounds effects.
+* 
+* Outputs two tables:
+* Table 1: contains a summary of throws. Sums before and after pause or switch seperately.
+* Table 2: contains a detailed list of throws including reaction times.
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+requires 1.10;
+
+//default (standard) modules
+import std_entry_page1;
+import std_blank_page;
+import std_windows1;
+import std_exit_page1;
+
+//specific modules
+import game_page;
+import participant;
+import glove_choice_page;
+import pause_page;
+import texts;
+
+import output;
+
+
+Experiment experiment
+{
+	string glove_of_choice;
+	
+	Sex player_sex;
+	int middle_player_face;
+	
+    on_event:entry()
+    {	
+		//~ control.button_box.open();  
+	    //~ control.button_box.output(0x02); // If necessary set parallel port line D0 to power button box device. (sometimes nesc. for laptop or PCI based cards		
+		if(check_participant_fields() == ERROR)
+		{
+			println("ERROR:\tGENDER(male|female|other) and control_variable (1|2|3) not set. Please set these in Participant >> Edit!");
+			terminate;
+		}
+		
+		show_test_windows();
+		if(expdb.participant.get_enum_field("gender") == "male")
+			player_sex = MALE;
+		else if(expdb.participant.get_enum_field("gender") == "female")
+			player_sex = FEMALE;
+		else if(expdb.participant.get_enum_field("gender") == "other")
+		{
+			player_sex = random(0,2)? MALE : FEMALE;
+		}
+		middle_player_face = expdb.participant.get_int_field("control_variable");
+    }
+        
+    Part welcome
+    {
+        on_event:entry()
+        {
+			entry_page.hide_cursor();
+            entry_page.set_text(INTRODUCTION_TEXT);
+            entry_page.action(this, 0s);
+        }
+        on_event:exit()
+        {
+			entry_page.show_cursor();
+		}
+    }
+    
+    Part instruction // instruction
+	{
+		on_event:entry()
+        {
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+	
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+	
+    Part glove_select //glove selection
+    {
+		on_event:entry()
+		{
+			glove_choice_page.set_text(GLOVE_SELECTION_TEXT, true);
+			glove_choice_page.auto_action(this,1s);
+		}
+	}
+	
+	Block round0 //practice time the game starts
+    {
+		on_event:entry()
+		{
+			game_page.hide_cursor();
+			game_page.setup(glove_choice_page.chosen_name, player_sex, glove_choice_page.chosen_glove, middle_player_face, true);
+			game_page.start_game(this, reference_time, true);
+		}
+		on_event:exit()
+		{
+			game_page.show_cursor();
+		}
+	}
+
+	Part instruction2 // instruction after practice
+	{
+		on_event:entry()
+        {
+			pause_page.fill_pattern_color = rgbi:0/168/55;
+			pause_page.set_text(INSTRUCTION2_TEXT, true);
+			pause_page.action(this, 0s, 500ms, 500ms, true, 5s);
+		}
+	}
+
+    Block round1 //first time the game starts
+    {
+		on_event:entry()
+		{
+			game_page.hide_cursor();
+			game_page.setup(glove_choice_page.chosen_name, player_sex, glove_choice_page.chosen_glove, middle_player_face);
+			game_page.start_game(this, reference_time);
+		}
+		on_event:exit()
+		{
+			game_page.show_cursor();
+		}
+	}
+	
+	Part // previous part likely exited with a pause set.
+	{
+		on_event:entry()
+		{
+			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0)
+			{	
+				pause_page.fill_pattern_color = rgbi:0/168/55; // very specific color that matches the background used.
+				pause_page.set_text(PAUZE_TEXT);
+				pause_page.action(this, 0s, 500ms, 500ms, true, 10s);
+			} else signal(this, CONTINUE);
+		}
+	}
+	
+	Block round2 //second time the game starts
+    {
+		on_event:entry()
+		{
+			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0)
+			{
+				game_page.hide_cursor();
+				game_page.start_game(this, reference_time);
+			} else signal(this, CONTINUE);
+		}
+		
+		on_event:exit()
+		{
+			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0)
+				game_page.show_cursor();
+		}
+	}
+	
+	 Part thankyou
+    {
+        on_event:entry()
+        {			
+			//wrap things up: create a game_summary based on the throw details (game_output2):
+			make_game_summary(game_output2);
+			
+			//time to put the results into actual datafiles (should I do this earlier to better handle data-persistence when the game crashes?)
+			test_output_save();
+			
+			control.end_experiment();   // Check-in session.
+			
+			exit_page.hide_cursor();
+			exit_page.fill_pattern_color = rgbi:0/168/55;
+			exit_page.set_text(THANK_YOU_TEXT);
+			exit_page.action(this, 5s, 500ms, 500ms);
+        }
+        
+        on_event:exit()
+        {
+			exit_page.show_cursor();
+		}
+    }
+}

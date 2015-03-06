@@ -1,0 +1,62 @@
+/******************************************************************************\
+FILE:           shuffle.zm
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+ABOUT: shuffles the list of throws.
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+// Shuffles test_items table according to following criterion:
+//   - Two subsequent items may not have same type.
+
+int shuffle_list(Player[] throw_list, int player)
+{
+    if(bot_action.bot_targets[player].size < 3) // not much use if there are only or less targets! =/
+    {
+		throw_list.shuffle(0,-1);
+		return OK;
+	}
+	int nitems = throw_list.size;
+ 
+	// Depending on criteria and table contents it may happen that it takes
+	// several attempts to make the shuffling succeed. We'll try it 100 times
+	// before giving up.
+	int nattempts;
+	bool again = true;
+	while (again && ++nattempts < 100)
+	{
+		// First shuffle the entire item table.
+		again = false;
+		throw_list.shuffle(0, -1);
+ 
+		// Walk over the table and check for items conflicting with the
+		// criterion. If an item conflicts, then swap it randomly with one
+		// of the items not yet looked at.
+		int n = 1;
+		while (n < nitems)
+		{
+			int nitemswaps;
+			while (throw_list[n] == throw_list[n-1])
+			{
+				if (n+1 == nitems || ++nitemswaps == 10)
+				{
+					again = true;
+					break;
+				}
+				throw_list.swap(n, random(n, nitems - n));
+			}
+			if (again) break;
+			n++;
+		}
+	}
+ 
+	if (again)
+		println("Unable to shuffle test_items according to criteria. "
+			"Check table and/or criteria.");
+ 
+	return again ? ERROR : OK;
+}

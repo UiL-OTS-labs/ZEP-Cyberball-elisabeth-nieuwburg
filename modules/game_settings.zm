@@ -1,0 +1,189 @@
+/******************************************************************************\
+FILE:           game_settings.zm
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+ABOUT: contains nearly all game_settings. Did not use defs / globaldefs since
+* I think it is more accurate to call it game settings.
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+// =====================================================================
+// GENERAL GAME SETTINGS
+// =====================================================================
+
+const dur MINIMUM_BOT_WAITING_TIME = 500ms; //should be longer than the catch sound (mind you!)
+const dur MAXIMUM_BOT_WAITING_TIME = 2000ms; 
+const int OVERALL_MAXIMUM_ALLOWED_THROWS  = 500;
+
+/**
+* The behaviour of bots will change depending on the settings below!
+* If you set the PLAYER_THROWS, it will base the switch and game-end
+* on the PLAYER_THROWS. That is, if the player has thrown the ball X times 
+* the game will switch/end. To disable it set it to 0 or -1.
+* 
+* Alternatively, if you set the BOT_THROWS low it will base the switch
+* and game-end on the BOT_THROWS. That is, EACH BOT will have to have 
+* thrown AT LEAST that number of balls (except the excluded one). 
+*
+* The latter is recommended because the bots counterbalance their throws.
+
+* The game checks is either the player throws or the bots throws have ran out.
+* So generally, which ever is lower tend to be the guiding factor (you can increase one to 99)
+**/
+
+const int PLAYER_THROWS_IN_PRACTICE 	= 3;
+
+const Player EXCLUDED_AFTER_SWITCH 		= MIDDLE_BOT; // LEFT_BOT, RIGHT_BOT, MIDDLE_BOT, HUMAN
+
+const int PLAYER_THROWS_PRIOR_SWITCH  	= 30; // 0 or -1 disables this option
+const int PLAYER_THROWS_POST_SWITCH   	= 30; //try to keep this number a multiple of the number of 3 (=players-1)
+
+// number of throws per bot. 
+// Note that prior switch this number is multiplied by 3 (set to 6 = 18 throws).
+// post switch this number is multiplied by 2 (number of legal bots; set to 10 = 20 throws).
+const int BOT_THROWS_PRIOR_SWITCH 		= 6; //try to keep this number a multiple of the number of 3 (=players-1).
+const int BOT_THROWS_POST_SWITCH 		= 10; //try to keep this number a multiple of the number of 2 (=players-1). Note that one player is excluded.
+
+const int PLAYER_THROWS_AT_WHICH_TO_PAUSE = -1; // put at -1 to not have a pause at all.
+
+// =====================================================================
+// SOUND SETTINGS
+// =====================================================================
+const string GAME_PAUZE_SOUND = "signal.wav";
+const string GAME_THROW_SOUND = "throw.wav";
+const string GAME_CATCH_SOUND = "catch.wav";
+
+
+// =====================================================================
+// PLAYER SETTINGS (names)
+// =====================================================================
+string[..][..] player_names =
+{
+	{ //FEMALE
+		"HUMAN", 
+		"Miss Moneypenny", 
+		"Golden Lady", 
+		"Lady Liberty"
+	},
+	{ // MALE
+		"HUMAN", 
+		"Ash Ketchup", 
+		"Nicle Furion", 
+		"Duperman Cant"
+	}, 
+};
+
+// =====================================================================
+// GRAPHIC SETTINGS: BALL_IMAGE
+// =====================================================================
+const string		BALL_IMAGE = "baseball.svg";
+const int 			BALL_WIDTH = 36;
+
+// =====================================================================
+// THROW SETTINGS
+// =====================================================================
+
+// settings below can range from minimum to factor*minimum
+const real 	MINIMUM_TO_MAXIMUM_FACTOR 	= 2.5;
+
+const dur 		MINIMUM_THROW_DURATION 		= 500ms;
+const dur		MINIMUM_PRE_THROW_DURATION 	= 200ms;
+const real 		MINIMUM_SPIN				= .2;
+const real 		MINIMUM_HEIGHT_INCREASE		= 3;
+
+// =====================================================================
+// GRAPHIC SETTINGS: TITLE_SCREEN
+// =====================================================================
+const string		TITLE_SCREEN_IMAGE = "title_image.svg";
+const int			TITLE_IMAGE_HEIGHT = 800; //height is dependend based on the width
+const real			TITLE_BALL_RELATIVE_X = .540;
+const real			TITLE_BALL_RELATIVE_Y = .385;
+
+// =====================================================================
+// GRAPHIC SETTINGS: BACKGROUND_IMAGE
+// =====================================================================
+const string		BACKGROUND_IMAGE = "baseball_field.svg";
+
+// The following will be used to determine the actual x and y coordinates of the pads that are in the picture:
+// the faces and gloves are drawn based on it
+const real			PLAYER_RELATIVE_X = 0.5;
+const real			PLAYER_RELATIVE_Y = 0.996;
+
+const real			LEFT_BOT_RELATIVE_X = 0.25;
+const real			LEFT_BOT_RELATIVE_Y = 0.6;
+
+const real			MIDDLE_BOT_RELATIVE_X = 0.5;
+const real			MIDDLE_BOT_RELATIVE_Y = 0.208;
+
+const real			RIGHT_BOT_RELATIVE_X = 0.75;
+const real			RIGHT_BOT_RELATIVE_Y = 0.6;
+
+// =====================================================================
+// GRAPHIC SETTINGS: FACE_IMAGE / PLAYERS
+// =====================================================================
+const int			FACE_IMAGE_WIDTH 	= 90; //goofy picture size.
+const int			FACE_IMAGE_HEIGHT 	= 120;
+const int			FACE_IMAGE_SPACING 	= 10;
+
+string NO_PLAYER_NAME 			= "No Player";
+string NO_PLAYER_FACE_FILENAME = "disconnected.png";
+
+string[..][..] player_faces =
+{
+	{
+		"",
+		"face_female_1.png",
+		"face_female_2.png",
+		"face_female_3.png",
+	},
+	{
+		"",
+		"face_male_1.png",
+		"face_male_2.png",
+		"face_male_3.png",
+	},
+};
+
+
+// =====================================================================
+// GRAPHIC SETTINGS: NAMES
+// =====================================================================
+const string    	NAME_FONT_FAMILY 		= FONT_FAMILY_SERIF;
+const real      	NAME_FONT_SIZE    		= FONT_SIZE_LARGE;
+const color			NAME_FONT_COLOR			= color:white;
+const color			NAME_BOX_COLOR			= color:black;
+const int			NAME_SPACING_VER 		= 20;
+
+// =====================================================================
+// GRAPHIC SETTINGS: GLOVE_IMAGE
+// =====================================================================
+
+const int			GLOVE_IMAGE_SPACING_HOR = 110;
+const int			GLOVE_IMAGE_SPACING_VER = 100;
+const int			GLOVE_IMAGE_WIDTH 		= 90;
+const int			GLOVE_IMAGE_HEIGHT 		= 90;
+const real 			GLOVE_IMAGE_REL_SIZE    = 1; // used in the choice page
+
+string[..][..] possible_gloves =
+{
+	{ // LEFT
+		"glove_left_1.png",
+		"glove_left_2.png",
+		"glove_left_3.png",
+		"glove_left_4.png",
+		"glove_left_5.png",
+		"glove_left_6.png",
+	},
+	{ // RIGHT
+		"glove_right_1.png",
+		"glove_right_2.png",
+		"glove_right_3.png",
+		"glove_right_4.png",
+		"glove_right_5.png",
+		"glove_right_6.png",
+	}
+};

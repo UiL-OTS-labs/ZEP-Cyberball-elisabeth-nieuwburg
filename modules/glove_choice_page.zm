@@ -1,0 +1,525 @@
+/******************************************************************************\
+FILE:           game_settings.zm
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+ABOUT: Describes a page where a glove can be chosen and sets the chosen_glove string
+* based on that.
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+
+Page glove_choice_page
+{
+	string chosen_glove = "glove_left_1.png";
+	string chosen_name = "Player 1";
+
+    init()
+    {			
+        fill_pattern_color = color:lightgray;
+    }
+
+
+    on_event:key_press()
+    {
+       handle_special_key(this, input_key, input_modifiers);
+    }
+
+
+    VerticalLayout layout
+    {
+        init()
+        {
+            spacing = 100;
+            //options = LAYOUT_SHRINK_ITEMS;
+        }
+
+
+        LabelGadget message
+        {
+            init()
+            {
+                font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
+                font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
+                fill_pattern_color = color:lightgray;
+                text_color = color:black;
+                is_wrapping = true;
+                size = -1, -1; 
+                margin = 2;
+            }
+        }
+
+        HorizontalLayout hlayout1
+        {
+            init()
+            {
+                 spacing = 50;
+            }
+
+            LabelGadget message
+            {
+                init()
+                {
+                    text = "Player name: ";
+                    font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
+                    font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
+                    fill_pattern_color = color:lightgray;
+                    text_color = color:black;
+                    is_wrapping = true;
+                    size = -1, -1; 
+                    margin = 2;
+                }
+            }
+
+            TextFieldGadget name
+            {
+                init()
+                {
+                    text = chosen_name;
+                    font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
+                    font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
+                    fill_pattern_color = color:black;
+                    text_color = color:white;
+                    hor_alignment = ALIGN_CENTER;
+                    ver_alignment = ALIGN_CENTER;
+                    width = 300;
+                    height = 50;
+                    border = 2;
+                }
+            }
+        }
+
+	HorizontalLayout hlayout
+	{
+		init()
+		{
+			 spacing = 300;
+		}
+
+        HorGridLayout buttons1
+        {
+            init()
+            {
+                hor_spacing = 10;
+                ver_spacing = 10;
+                //~ options = LAYOUT_EQUAL_WIDTH;
+            }
+
+
+            ButtonGadget button1
+            {
+                init()
+                {
+//                  text = "1";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(0, 1, event_time);
+                }
+            }
+
+
+            ButtonGadget button2
+            {
+                init()
+                {
+//                  text = "2";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(0, 2, event_time);
+                }
+            }
+
+
+            ButtonGadget button3
+            {
+                init()
+                {
+//                  text = "3";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(0, 3, event_time);
+                }
+            }
+
+
+            ButtonGadget button4
+            {
+                init()
+                {
+//                  text = "4";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(0, 4, event_time);
+                }
+            }
+
+
+            ButtonGadget button5
+            {
+                init()
+                {
+//                  text = "5";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(0, 5, event_time);
+                }
+            }
+
+
+            ButtonGadget button6
+            {
+                init()
+                {
+//                  text = "6";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(0, 6, event_time);
+                }
+            }
+        }
+        
+        HorGridLayout buttons2
+        {
+            init()
+            {
+                hor_spacing = 10;
+                ver_spacing = 10;
+                options = LAYOUT_EQUAL_WIDTH;
+            }
+
+
+            ButtonGadget button1
+            {
+                init()
+                {
+//                  text = "1";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(1, 1, event_time);
+                }
+            }
+
+
+            ButtonGadget button2
+            {
+                init()
+                {
+//                  text = "2";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(1, 2, event_time);
+                }
+            }
+
+
+            ButtonGadget button3
+            {
+                init()
+                {
+//                  text = "3";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(1, 3, event_time);
+                }
+            }
+
+
+            ButtonGadget button4
+            {
+                init()
+                {
+//                  text = "4";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(1, 4, event_time);
+                }
+            }
+
+
+            ButtonGadget button5
+            {
+                init()
+                {
+//                  text = "5";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(1, 5, event_time);
+                }
+            }
+
+
+            ButtonGadget button6
+            {
+                init()
+                {
+//                  text = "6";
+					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+
+
+                on_event:activate()
+                {
+                    response.process_hit(1, 6, event_time);
+                }
+            }
+        }
+		}
+	}
+
+
+    Response response
+    {
+        void clear()
+        {
+			chosen_glove = "";
+        }
+
+
+        void process_hit(int side, int val, time t)
+        {
+            if (hit(t) == HIT_VALID)
+            {
+                chosen_name = layout.hlayout1.name.text;
+                chosen_glove = possible_gloves[side][val-1];
+                
+				possible_gloves[0][val-1] = possible_gloves[0][possible_gloves[0].size-1];
+				possible_gloves[0].size = possible_gloves[0].size - 1;
+				
+				possible_gloves[1][val-1] = possible_gloves[1][possible_gloves[1].size-1];
+				possible_gloves[1].size = possible_gloves[1].size - 1;
+                ignore_remaining_hits();
+
+                stop();
+            }
+        }
+
+
+        on_event:finish()
+        {
+            done(CONTINUE);
+        }
+    }
+
+
+    void done(int msgid)
+    {
+        signal_target(msgid);   // Tell caller we're done.
+        target = null;
+    }
+
+
+    //==========================================================================
+
+
+    void set_text(string txt, bool markup=false)
+    {
+        layout.message.text = txt, markup;
+    }
+    
+    void set_label_images_left(string s1, string s2, string s3, string s4, 
+        string s5, string s6)
+	{
+		layout.hlayout.buttons1.button1.fill_pattern_image = stimuli_dir() + "images/" + s1;
+		layout.hlayout.buttons1.button1.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons1.button1.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons1.button2.fill_pattern_image = stimuli_dir() + "images/" + s2;
+        layout.hlayout.buttons1.button2.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons1.button2.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons1.button3.fill_pattern_image = stimuli_dir() + "images/" + s3;
+        layout.hlayout.buttons1.button3.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons1.button3.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons1.button4.fill_pattern_image = stimuli_dir() + "images/" + s4;
+        layout.hlayout.buttons1.button4.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons1.button4.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons1.button5.fill_pattern_image = stimuli_dir() + "images/" + s5;
+        layout.hlayout.buttons1.button5.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons1.button5.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons1.button6.fill_pattern_image = stimuli_dir() + "images/" + s6;
+        layout.hlayout.buttons1.button6.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons1.button6.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+	}
+	
+	void set_label_images_right(string s1, string s2, string s3, string s4, 
+        string s5, string s6)
+	{
+		layout.hlayout.buttons2.button1.fill_pattern_image = stimuli_dir() + "images/" + s1;
+		layout.hlayout.buttons2.button1.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons2.button1.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons2.button2.fill_pattern_image = stimuli_dir() + "images/" + s2;
+        layout.hlayout.buttons2.button2.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons2.button2.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons2.button3.fill_pattern_image = stimuli_dir() + "images/" + s3;
+        layout.hlayout.buttons2.button3.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons2.button3.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons2.button4.fill_pattern_image = stimuli_dir() + "images/" + s4;
+        layout.hlayout.buttons2.button4.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons2.button4.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons2.button5.fill_pattern_image = stimuli_dir() + "images/" + s5;
+        layout.hlayout.buttons2.button5.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons2.button5.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+        layout.hlayout.buttons2.button6.fill_pattern_image = stimuli_dir() + "images/" + s6;
+        layout.hlayout.buttons2.button6.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
+		layout.hlayout.buttons2.button6.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+	}
+
+
+ void auto_action(Object caller, dur fadedur=-1s, int correct=0, dur timeout=0s, 
+	dur showdelay=-1s)
+	{
+		action(caller, correct, timeout, showdelay, fadedur);
+	}
+	
+    void action(Object caller, int correct=0, dur timeout=0s, 
+        dur showdelay=-1s, dur fadedur=-1s)
+    {
+        response.clear();
+
+        // Force page show delay and transition duration in sane range.
+        if (showdelay < 0s) showdelay = page_transition_delay;
+        else showdelay = limit(showdelay, 0s, MAX_PAGE_TRANSITION_DELAY);
+        if (fadedur < 0s) fadedur = PAGE_TRANSITION_DURATION;
+        else fadedur = limit(fadedur, 0s, MAX_PAGE_TRANSITION_DURATION);
+        
+    	// Clear page transition delay.
+    	page_transition_delay = 0s;
+
+    	// Clear first trial delay.
+		first_trial_delay = 0s;
+
+		set_label_images_left(
+			possible_gloves[0][0],
+			possible_gloves[0][1],
+			possible_gloves[0][2],
+			possible_gloves[0][3],
+			possible_gloves[0][4],
+			possible_gloves[0][5]
+		);
+		
+		set_label_images_right(
+			possible_gloves[1][0],
+			possible_gloves[1][1],
+			possible_gloves[1][2],
+			possible_gloves[1][3],
+			possible_gloves[1][4],
+			possible_gloves[1][5]
+		);
+		
+        if (test_window1.show_page(this, now() + showdelay, fadedur) == 0)
+        {
+            // Page not yet shown. Let response period begin when the page 
+            // is fully visible (fade-in has finished).
+            response.start(expected_transition_finish_time, timeout);
+        }
+        else
+        {
+            // Page already shown. Let response period begin immediately.
+            response.start(now(), 0ms);
+        }
+
+        target = caller;
+
+        test_window1.activate();
+    }
+
+
+    void stop_action()
+    {
+        response.abort();
+        target = null;
+    }
+}

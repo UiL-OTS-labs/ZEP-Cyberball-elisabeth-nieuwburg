@@ -1,0 +1,43 @@
+/******************************************************************************\
+FILE:           player_record.zm
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+ABOUT: describes some of the enumarations, records, etc that are for the 
+* player and game
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+record PlayerRecord
+{
+	string playerName;
+	int	player_type;
+	string face_image;
+	string glove_image;
+	int x; int y; //resembles the location from which the primary player attributers (face and glove) are drawn from. After playerSetup it resembles where to receive the ball
+}
+
+enum Player
+{
+	HUMAN 		= 0,
+	LEFT_BOT 	= 1,
+	MIDDLE_BOT 	= 2,
+	RIGHT_BOT 	= 3,
+}
+
+enum Sex
+{
+	FEMALE,
+	MALE,
+}
+
+void setPlayerCoor(Player player, int x, int y)
+{
+	game_page.playersList[player].x = x;
+	game_page.playersList[player].y = y;
+}
+
+

@@ -1,0 +1,433 @@
+/******************************************************************************\
+FILE:           graphic_layout.zm
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+ABOUT: Contains the graphical layout of the game page.
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+import graphic_animators;
+
+init()
+{
+		test_window1.size(100);
+}
+
+StackLayout graphic_layout //graphic layers
+{
+	Page motherPage;
+	Window motherWindow;
+	ImageShape[..] gloves;
+	
+	init()
+	{
+		//Init glove registry:
+		gloves.size = 4; gloves[HUMAN] = l3.gloveHuman; gloves[LEFT_BOT] = l3.gloveLeft; gloves[MIDDLE_BOT] = l3.gloveMiddle; gloves[RIGHT_BOT] = l3.gloveRight;
+	}
+	
+	void setup(Page p, Window win, PlayerRecord[] playerList, string overlay_text = "")
+	{
+		motherPage = p;
+		motherWindow = win;
+		p.overlay = this;
+		
+		//order is important!:
+		l4.setup();
+		l3.setup(playerList);
+		l2.setup();
+		l1.setup();
+		l0.setup(overlay_text);
+	}	
+
+// ================================================================
+//			Background Image Layer
+// ================================================================
+	CanvasGadget l4 //background image
+	{
+		ImageShape background
+        {
+            void setup()
+            {
+                image = stimuli_dir() + "images/" + BACKGROUND_IMAGE;
+                height = motherWindow.height;
+                width  = image_width * (height/image_height);
+                x = (motherWindow.width - width)/2;
+                y = (motherWindow.height - height)/2; 
+                is_visible = true;
+            }
+        }
+        
+        void setup()
+        {
+			width = motherWindow.width; height = motherWindow.height; 
+			background.setup();
+		}
+	}
+	
+	
+// ================================================================
+//			Players Layer
+// ================================================================
+	CanvasGadget l3 // gloves + playerimages + names
+	{
+		ImageShape faceHuman
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x;
+				y = player.y + FACE_IMAGE_SPACING; //slightly away from the point
+				width = FACE_IMAGE_WIDTH;height = FACE_IMAGE_HEIGHT;
+				offset_x = -(width/2);
+                is_visible = false;
+            }
+        }
+        
+        ImageShape faceLeft
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x - FACE_IMAGE_SPACING;
+				y = player.y; 
+				if(! (player.face_image == ""))
+					image = stimuli_dir() + "images/" + player.face_image;
+				width = FACE_IMAGE_WIDTH;height = FACE_IMAGE_HEIGHT;
+				offset_x = round(-width);
+				offset_y = round( -(height/2) );
+                is_visible = true;
+            }
+        }
+        
+         ImageShape faceMiddle
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x;
+				y = player.y - FACE_IMAGE_SPACING; //slightly away from the point
+				if(! (player.face_image == ""))
+					image = stimuli_dir() + "images/" + player.face_image;
+				width = FACE_IMAGE_WIDTH;height = FACE_IMAGE_HEIGHT;
+				offset_x = round(-(width/2));
+				offset_y = round(-height);
+                is_visible = true;
+            }
+        }
+        
+        ImageShape faceRight
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x + FACE_IMAGE_SPACING;
+				y = player.y; //slightly away from the point
+				if(! (player.face_image == ""))
+					image = stimuli_dir() + "images/" + player.face_image;
+				width = FACE_IMAGE_WIDTH;height = FACE_IMAGE_HEIGHT;
+				offset_y = round(-(height/2));
+                is_visible = true;
+            }
+        }
+        
+        ImageShape gloveHuman
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x; y = player.y - GLOVE_IMAGE_SPACING_VER;
+                image = stimuli_dir() + "images/" + player.glove_image;
+                width = GLOVE_IMAGE_WIDTH; height = GLOVE_IMAGE_HEIGHT;
+				offset_x = round(-(width/2)); offset_y = round(-(height/2));
+				setPlayerCoor(HUMAN, int(x), int(y)); //re-adjust the coordinates for catching the ball
+                is_visible = true;
+            }
+        }
+        
+        ImageShape gloveLeft
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x + GLOVE_IMAGE_SPACING_HOR;
+				y = player.y; 
+				if(! (player.glove_image == ""))
+					image = stimuli_dir() + "images/" + player.glove_image;
+				width = GLOVE_IMAGE_WIDTH;height = GLOVE_IMAGE_HEIGHT;
+				offset_x = round(-(width/2)); offset_y = round(-(height/2));
+				setPlayerCoor(LEFT_BOT, int(x), int(y)); //re-adjust the coordinates for catching the ball
+                is_visible = true;
+            }
+        }
+        
+         ImageShape gloveMiddle
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x;
+				y = player.y + GLOVE_IMAGE_SPACING_VER;
+				if(! (player.glove_image == ""))
+					image = stimuli_dir() + "images/" + player.glove_image;
+				width = GLOVE_IMAGE_WIDTH;height = GLOVE_IMAGE_HEIGHT;
+				offset_x = round(-(width/2)); offset_y = round(-(height/2));
+				setPlayerCoor(MIDDLE_BOT, int(x), int(y)); //re-adjust the coordinates for catching the ball
+                is_visible = true;
+            }
+        }
+        
+        ImageShape gloveRight
+        {
+            void setup(PlayerRecord player)
+            {
+				x = player.x - GLOVE_IMAGE_SPACING_HOR;
+				y = player.y; //slightly away from the point
+				if(! (player.glove_image == ""))
+					image = stimuli_dir() + "images/" + player.glove_image;
+				width = GLOVE_IMAGE_WIDTH;height = GLOVE_IMAGE_HEIGHT;
+				offset_x = round(-(width/2)); offset_y = round(-(height/2));
+				setPlayerCoor(RIGHT_BOT, int(x), int(y)); //re-adjust the coordinates for catching the ball
+                is_visible = true;
+            }
+        }
+                
+		RectangleShape boxLeft
+		{
+			void setup(TextShape text)
+			{
+				x = text.x-10;
+				y = text.y;
+				width = text.string_width(text.text)+ 20;
+				height = text.string_height(text.text);
+				fill_pattern_color = NAME_BOX_COLOR;
+				is_visible = true;
+			}
+		}
+		
+		TextShape textLeft
+        {
+			void setup(ImageShape face, PlayerRecord player)
+			{
+				text = player.playerName;
+				x = round(face.x - face.width/2);
+				y = round(face.y - ( string_height(text) + NAME_SPACING_VER) - face.height/2);
+				font_family 		= NAME_FONT_FAMILY;
+                font_size 			= NAME_FONT_SIZE;
+                line_pattern_color 	= NAME_FONT_COLOR;
+				x = round (x - string_width(text)/2);
+                is_visible = true;
+			}
+		}
+		
+		RectangleShape boxMiddle
+		{
+			void setup(TextShape text)
+			{
+				x = text.x-10;
+				y = text.y;
+				width = text.string_width(text.text)+ 20;
+				height = text.string_height(text.text);
+				fill_pattern_color = NAME_BOX_COLOR;
+                is_visible = true;
+			}
+		}
+		
+		 TextShape textMiddle
+        {
+			void setup(ImageShape face, PlayerRecord player)
+			{
+				text = player.playerName;
+				x = round(face.x);
+				y = round(face.y - ( string_height(text) + NAME_SPACING_VER) - face.height);
+				font_family 		= NAME_FONT_FAMILY;
+                font_size 			= NAME_FONT_SIZE;
+                line_pattern_color 	= NAME_FONT_COLOR;
+				x = x - string_width(text)/2;
+                is_visible = true;
+			}
+		}
+		
+		RectangleShape boxRight
+		{
+			void setup(TextShape text)
+			{
+				x = text.x-10;
+				y = text.y;
+				width = text.string_width(text.text)+ 20;
+				height = text.string_height(text.text);
+				fill_pattern_color = NAME_BOX_COLOR;
+                is_visible = true;
+			}
+		}
+		
+		 TextShape textRight
+        {
+			void setup(ImageShape face, PlayerRecord player)
+			{
+				text = player.playerName;
+				x = round(face.x + face.width/2);
+				y = round(face.y - ( string_height(text) + NAME_SPACING_VER) - face.height/2);
+				font_family 		= NAME_FONT_FAMILY;
+                font_size 			= NAME_FONT_SIZE;
+                line_pattern_color 	= NAME_FONT_COLOR;
+				x = x - string_width(text)/2;
+                is_visible = true;
+			}
+		}
+		
+		RectangleShape boxPlayer
+		{
+			void setup(TextShape text)
+			{
+				x = text.x-10;
+				y = text.y;
+				width = text.string_width(text.text)+ 20;
+				height = text.string_height(text.text);
+				fill_pattern_color = NAME_FONT_COLOR;
+                is_visible = true;
+			}
+		}
+		
+		 TextShape textPlayer
+        {
+			void setup(ImageShape face, PlayerRecord player)
+			{
+				text = player.playerName;
+
+				font_family 		= NAME_FONT_FAMILY;
+                font_size 			= NAME_FONT_SIZE/1.5;
+                line_pattern_color 	= NAME_BOX_COLOR;
+
+                x = round(player.x + 200) ;//+ FACE_IMAGE_WIDTH * 2);
+				y = round(player.y - string_height(text, true)); // - (string_height(text)/2) + );
+                is_visible = true;
+			}
+		}
+
+        void setup(PlayerRecord[] playerList)
+        {
+			width = motherWindow.width; height = motherWindow.height;			
+			
+			faceHuman.setup(playerList[HUMAN]);
+			faceLeft.setup(playerList[LEFT_BOT]);
+			faceMiddle.setup(playerList[MIDDLE_BOT]);
+			faceRight.setup(playerList[RIGHT_BOT]);
+			
+			textLeft.setup(faceLeft, playerList[LEFT_BOT]);
+			boxLeft.setup(textLeft);
+			textMiddle.setup(faceMiddle, playerList[MIDDLE_BOT]);
+			boxMiddle.setup(textMiddle);
+			textRight.setup(faceRight, playerList[RIGHT_BOT]);
+			boxRight.setup(textRight);
+			textPlayer.setup(faceHuman, playerList[HUMAN]);
+			boxPlayer.setup(textPlayer);
+
+			gloveHuman.setup(playerList[HUMAN]);
+			gloveLeft.setup(playerList[LEFT_BOT]);
+			gloveMiddle.setup(playerList[MIDDLE_BOT]);
+			gloveRight.setup(playerList[RIGHT_BOT]);
+		}
+	}
+
+// ================================================================
+//			TextOverlay Layer
+// ================================================================
+CanvasGadget l0 //ball layer
+{
+	TextShape textlabel
+    {
+		void setup(string text_)
+		{
+			text = text_;
+			font_size = FONT_SIZE_SMALL;
+			font_family = FONT_FAMILY_SANS;
+			line_pattern_color 	= color:black;
+			is_visible = true;
+			offset_x = round(-(string_width(text)/2));
+			offset_y = round(-(string_height(text)/2)); 
+		}
+		
+	}
+    
+    void setup(string text)
+    {
+		width = motherWindow.width; height = motherWindow.height;
+		l0.offset_x = round((width/2)); l0.offset_y = round((height/2)); 
+		textlabel.setup(text);
+	}
+}
+
+// ================================================================
+//			Title Screen Layer
+// ================================================================
+	CanvasGadget l2 //title screen layer
+	{
+		ImageShape titleImage
+        {
+            void setup()
+            {
+				image = stimuli_dir() + "images/" + TITLE_SCREEN_IMAGE;
+                height = TITLE_IMAGE_HEIGHT;
+                width  = image_width * (height/image_height); 
+				offset_x = round(-(width/2)); offset_y = round(-(height/2));
+                is_visible = true;
+            }
+            
+        }
+        
+        TextShape text
+        {
+			void setup()
+			{
+				text = "PRESS ENTER TO CONTINUE";
+				font_size = FONT_SIZE_SMALL;
+				font_family = FONT_FAMILY_SANS;
+				line_pattern_color 	= color:black;
+				y = round((l2.height/2) - string_height(text) - 20);
+				offset_x = round( -(string_width(text)/2));
+				is_visible = true;
+			}
+			
+		}
+        
+        void setup()
+        {
+			width = motherWindow.width; height = motherWindow.height;
+			l2.offset_x = round((width/2)); l2.offset_y = round((height/2)); 
+			fill_pattern_color = color:lightgray;
+			titleImage.setup();
+			text.setup();
+		}
+		
+		void disable_intro()
+		{
+			is_visible = false;
+			animator_intro.played = true;
+			l1.offset_x = game_page.playersList[HUMAN].x;
+			l1.offset_y = game_page.playersList[HUMAN].y;
+		}
+	}
+	
+// ================================================================
+//			Ball Layer
+// ================================================================
+	CanvasGadget l1 //ball layer
+	{
+		ImageShape ball
+        {
+            void setup()
+            {
+				image = stimuli_dir() + "images/" + BALL_IMAGE;
+				width = BALL_WIDTH;
+				height = image_height * (width/image_width);
+				offset_x = round(-(width/2));
+				offset_y = round(-(height/2)); 
+                is_visible = true;
+            }
+        }
+        
+        void setup()
+        {
+			width = motherWindow.width; height = motherWindow.height;
+			offset_x = TITLE_BALL_RELATIVE_X * width; offset_y = TITLE_BALL_RELATIVE_Y * height;
+			ball.setup();
+		}
+	}
+} //layout

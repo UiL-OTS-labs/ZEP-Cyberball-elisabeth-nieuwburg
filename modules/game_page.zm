@@ -1,0 +1,410 @@
+/******************************************************************************\
+FILE:           game_page.zm
+AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
+ADAPTED BY:     -
+
+ABOUT: describes the page that is the actual game. Note that during the setup
+* the layout is actually set to the Page.overlay. This allows the layout to be
+* described in a different file: graphic_layout.zm
+
+HISTORY:
+2014-07-31 CvR   Created.
+
+\******************************************************************************/
+
+import player_record;
+import graphic_layout;
+
+import game_settings;
+
+import bot_behaviour;
+
+Page game_page
+{
+	bool playerSetup;
+	bool graphicSetup;
+	
+	bool practice;
+
+	PlayerRecord[..] playersList; //adheres to the enumartion order defined in player_record (i.e. 0 is the HUMAN player aka leaking meatsack)
+	Player current_ball_holder;
+	
+	bool switched;							// Boolean to know if the behaviour of the bots have been switched
+	bool had_a_pauze;						// Boolean to know if there was a game_pause
+	
+	int total_number_of_throws; 			// is not reset at switch
+	int player_total_number_of_throws; 		// is reset at switch
+	
+	char        key1 = KEY_Left;           	// key for left bot
+	char        key2 = KEY_Up;           	// key for middle bot
+    char        key3 = KEY_Right;           // key for right bot
+    
+   init()
+   {
+	   current_ball_holder = HUMAN;
+   }
+   
+	on_event:key_press()
+	{
+		if (input_key == KEY_Escape) // goes to the next step
+			end_game();
+		if(!animating())
+			{
+				// if the animation hasn't played yet and enter was pressed:
+				if(input_key == KEY_Return && !animator_intro.played)
+				{
+					//begin the INTRO! 			
+					animator_intro.begin(event_time);		
+				}						
+				else if(animator_intro.played && current_ball_holder == HUMAN) // if it has played and the HUMAN (leaking meatsack) is holding the ball...
+					handle_player_choice(input_key, event_time);
+			}
+	}
+ 
+	// A player made achoice, so handle it!
+	void handle_player_choice(char key, time tref)
+	{
+		if(key == key1)
+			throw(HUMAN, LEFT_BOT, tref);
+		if(key == key2)
+			throw(HUMAN, MIDDLE_BOT, tref);
+		if(key == key3)
+			throw(HUMAN, RIGHT_BOT, tref);
+	}
+	
+	// For is someone wants to change the keys during runtime
+	 void set_keys(char k1, char k2, char k3)
+    {
+        key1 = k1;
+        key2 = k2;
+        key3 = k3;
+    }
+ 
+    // Object for response handling.
+    Response response
+    {
+        int process_throw_rt(time t)
+        {
+            int rt;
+            
+            HitType validity = hit(t);
+ 
+            // Accept the first hit in the response interval and end the
+            // response interval.
+            if (validity == HIT_VALID)
+            {
+                rt = int(reaction_time(0));
+                ignore_remaining_hits();
+ 
+                stop();
+            }
+            else if (validity == HIT_TOO_EARLY || validity == HIT_TOO_LATE)
+            {
+                // False alarm. Deal with this if desired.
+            }
+            return rt;
+        }
+    }
+ 
+ 
+    // Performs preparatory work required before using this page.
+    void setup(string human_name, Sex human_sex, string glove_of_choice, int middle_player_face_choice, bool practice = false)
+    {
+    	//set game to either parctice or no practice mode
+    	game_page.practice = practice;
+
+		//sets up players based on
+		game_page.setupPlayers(glove_of_choice, human_sex, human_name, middle_player_face_choice, practice);
+		
+		// setup graphic, depedent on players being defined
+		game_page.setupGraphics(practice);
+		
+		// initialise the possible throws based on bot_targets
+		bot_action.init_bots(practice);		
+	}
+	
+	// Performs preparatory work required before using the graphical layers.
+    void setupGraphics(bool practice)
+    {
+			if(!playerSetup)
+				println("ERROR: setup players THEN setup graphics!");
+			string overlay_text = "";
+			if(practice)
+				overlay_text = "PRACTICE ROUND";
+			graphic_layout.setup(this, test_window1, playersList, overlay_text); // the page, the window, and the list of players (PlayerRecord)
+			graphicSetup = true;
+    }
+    
+    // Performs preparatory work on the players before the game starts
+    void setupPlayers(string gloveHum, Sex sexHum, string human_name, int middle_player_face_choice, bool practice = false)
+    {
+		playersList.size = 4;
+		player_names[sexHum].shuffle(1, -1);
+		
+		
+		//the next part handles the choice of gloves but prevents them being equal (during glove selection the selected glove was removed from the pool).
+		int left_bot_glove = random(0, possible_gloves[1].size);
+		int middle_bot_glove = random(0, possible_gloves[1].size);
+		int right_bot_glove = random(0, possible_gloves[1].size);
+		
+		while(!practice && possible_gloves[1].size >= 3 && right_bot_glove==left_bot_glove || right_bot_glove==middle_bot_glove || middle_bot_glove == left_bot_glove)
+		{
+			right_bot_glove = random(0, possible_gloves[1].size);
+			middle_bot_glove = random(0, possible_gloves[1].size);
+		}
+		
+		//the next part makes sure that the middle face was chosen and that the two other faces are set.
+		int left_bot_face; int middle_bot_face = middle_player_face_choice; int right_bot_face; 
+		
+		if(middle_bot_face == 1)
+		{
+			left_bot_face = 2;
+			right_bot_face = 3;
+		}
+		else if(middle_bot_face == 2)
+		{
+			left_bot_face = 1;
+			right_bot_face = 3;
+		}
+		else if(middle_bot_face == 3)
+		{
+			left_bot_face = 1;
+			right_bot_face = 2;
+		}
+		
+		if(random(0,2)==1) //half of the time switch them around
+		{
+			int temp = left_bot_face;
+			left_bot_face = right_bot_face;
+			right_bot_face = temp;
+		}
+		
+		
+		// combine everything in defining the new players =)
+		PlayerRecord human;
+		human.playerName = human_name;
+		human.player_type = HUMAN;
+		human.face_image = "";
+		human.glove_image = gloveHum;
+		human.x = int( test_window1.width * PLAYER_RELATIVE_X);		
+		human.y = int( test_window1.height * PLAYER_RELATIVE_Y);
+		playersList[HUMAN] = human;
+		
+		PlayerRecord left;
+		left.playerName = player_names[sexHum][LEFT_BOT];
+		left.player_type = LEFT_BOT;
+		left.face_image = player_faces[sexHum][left_bot_face];
+		left.glove_image = possible_gloves[0][left_bot_glove];
+		left.x = int( test_window1.width * LEFT_BOT_RELATIVE_X);		
+		left.y = int( test_window1.height * LEFT_BOT_RELATIVE_Y);
+		playersList[LEFT_BOT] = left;
+		
+		PlayerRecord middle;
+		middle.playerName = player_names[sexHum][MIDDLE_BOT];
+		middle.player_type = MIDDLE_BOT;
+		middle.face_image = player_faces[sexHum][middle_bot_face];
+		int side = random(0,1);
+		middle.glove_image = possible_gloves[side][middle_bot_glove];
+		middle.x = int( test_window1.width * MIDDLE_BOT_RELATIVE_X);		
+		middle.y = int( test_window1.height * MIDDLE_BOT_RELATIVE_Y);
+		playersList[MIDDLE_BOT] = middle;
+		
+		PlayerRecord right;
+		right.playerName = player_names[sexHum][RIGHT_BOT];
+		right.player_type = RIGHT_BOT;
+		right.face_image = player_faces[sexHum][right_bot_face];
+		right.glove_image = possible_gloves[1][right_bot_glove];
+		right.x = int( test_window1.width * RIGHT_BOT_RELATIVE_X);		
+		right.y = int( test_window1.height * RIGHT_BOT_RELATIVE_Y);
+		playersList[RIGHT_BOT] = right;
+
+		if(practice)
+		{
+			playersList[LEFT_BOT].playerName 	= NO_PLAYER_NAME;
+			playersList[MIDDLE_BOT].playerName 	= NO_PLAYER_NAME;
+			playersList[RIGHT_BOT].playerName 	= NO_PLAYER_NAME;
+
+			playersList[LEFT_BOT].face_image 	= NO_PLAYER_FACE_FILENAME;
+			playersList[MIDDLE_BOT].face_image 	= NO_PLAYER_FACE_FILENAME;
+			playersList[RIGHT_BOT].face_image 	= NO_PLAYER_FACE_FILENAME;
+		}
+
+		playerSetup = true;
+	}
+	
+ 
+    // Performs cleaning up if necessary.
+    void cleanup()
+    {
+    }
+ 
+    // Starts the game.
+    void start_game(Object caller, time tref, bool play_intro = false)
+    {
+		if(!graphicSetup || !playerSetup)
+		{
+			ctrl_window.error_dialog.action("ERROR: either the graphics or the players weren't correctly setup.", true);
+		}
+		
+		if(!play_intro)
+		{
+			graphic_layout.l2.disable_intro();
+			audio.play(stimuli_dir() + "sounds/" + GAME_PAUZE_SOUND, now());
+		}
+		
+		// Show this page (if not yet done) and make tref the trial start time.
+		test_window1.show_page(this, tref, 500ms);
+        	
+         // Remember who to signal when the trial is over.
+        target = caller;
+        
+        //set the current player to the human
+        current_ball_holder = HUMAN;
+        
+        //start the timer for the response
+         response.start(tref+10ms); // inacturate anyway because of the start of a round
+    }
+    
+    // Aborts any ongoing activity on this page and signals the initiator
+    // of the trial that we're done.
+    void end_game()
+    {		
+		audio.abort();
+		audio_throw.abort();
+		
+		audio.play(stimuli_dir() + "sounds/" + GAME_PAUZE_SOUND, now());
+		
+        signal_target(CONTINUE);   // tell caller we're done
+        target = null;
+        control.target = null;
+        control.button_box.disable_buttons();
+
+        control.clear_status();
+    }
+    
+    // Changes the behaviour of the bots by excluding a single player from the other bots target pools.
+    void switch_game()
+    {
+		// resets the player count so the game can end when the player has thrown a set amount of balls POST switch
+		player_total_number_of_throws = 0;
+		
+		// removes the player from the possible targets of the other bots
+		bot_action.remove_player_from_bot_targets(EXCLUDED_AFTER_SWITCH);
+		
+		// resets the possible throws based on bot_targets, now with the excluded removed from the targets
+		bot_action.init_bots();	
+		
+		// sets the number of throws of the excluded player at 0 so it is not registered as still having throws								
+		bot_action.clear_bot_throws(EXCLUDED_AFTER_SWITCH);	
+		
+		switched = true;
+	}
+    
+    // reports and checks if we need to do anything regarding the status of the game, returns in the round should be stoped.
+    bool check_status_game()
+    {
+    		bool round_is_finished = true;
+
+    		if(practice && player_total_number_of_throws >= PLAYER_THROWS_IN_PRACTICE)
+    		{
+    			//reset the throws
+    			total_number_of_throws = 0; 
+    			player_total_number_of_throws = 0;
+    			end_game();
+    			return round_is_finished;
+    		}
+
+			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0 && !had_a_pauze && player_total_number_of_throws >= PLAYER_THROWS_AT_WHICH_TO_PAUSE)
+			{
+				 println("Time for a pause!");
+				 signal_target(CONTINUE);
+				 had_a_pauze = true;
+				 return round_is_finished;
+			}
+			 
+			if(total_number_of_throws >= OVERALL_MAXIMUM_ALLOWED_THROWS) // The maximum is reached, we need to jump!
+				return round_is_finished;
+			else if(!switched && (!bot_action.still_throws_registered() || player_total_number_of_throws >= PLAYER_THROWS_PRIOR_SWITCH)) // init the switch!
+			{
+				println("SWITCH IS BEING MADE");
+				switch_game();
+				return !round_is_finished;
+			}
+			else if(switched && (!bot_action.still_throws_registered() || player_total_number_of_throws >=  PLAYER_THROWS_POST_SWITCH)) // init the end-game
+			{
+				println("ROUND/GAME IS FINISHED");
+				end_game();
+				return round_is_finished;
+			}
+			return !round_is_finished;
+	}
+	
+	
+	// actually makes a throw from one player to the next. Including logging it and setting up the animation.
+    time throw(Player from, Player to, time tref)
+    {
+		total_number_of_throws++;
+		int reaction_time = response.process_throw_rt(tref);
+
+		// log the throw, do this before checking ANYTHING, so that 'switched' and 'had_a_pauze' are relevant to the moment the throw
+		// choice was made!
+
+		ThrowSummary throw;
+			throw.throw_nr = total_number_of_throws;
+			throw.switched = switched;
+			throw.paused = had_a_pauze;
+			throw.from = from;
+			throw.to = to;
+			throw.RT = reaction_time;
+
+		if(!game_page.practice)
+			test_output_append(throw); //appends the throw, save happens at the thank you part of the experiment!
+
+		
+		
+		if(!check_status_game()) // is the round not finished yet?
+		{
+			// the next few lines generate a somewhat random throw parameters based on minimum and maximum settings.
+			real factor = real( random(10, int( (MINIMUM_TO_MAXIMUM_FACTOR-1) * 10 )))  / 10;
+			dur pre_throw_duration = MINIMUM_PRE_THROW_DURATION * factor;
+			real pre_throw_move = .1 * random(1,5);
+			
+			int dir = random(0,3) <= 1 ? -1 : 1;
+			real spins = MINIMUM_SPIN * factor * dir;
+			dur throw_duration = MINIMUM_THROW_DURATION * factor;
+			real height = MINIMUM_HEIGHT_INCREASE * (factor-1);
+
+			tref = animator_glove.begin(from, pre_throw_duration, pre_throw_move, tref);
+			audio_throw.play(pre_throw_duration, throw_duration, tref); // it sounds better if the woosh is played right after the ball starts traveling
+			
+			tref =  animator_throw.begin(
+						playersList[from].x, //x0
+						playersList[from].y, //y0
+						playersList[to].x, //x1
+						playersList[to].y, //y1
+						throw_duration, //how long to throw
+						spins, // number of spins
+						height, // height
+						tref+10ms //when to start the animation
+					); 
+			
+			// wait with the switch till until the ball has arrived.
+			holder.new = to;
+			holder.start(tref); 
+			
+			//setup new actions based on the to and from
+			if(to != HUMAN)
+				bot_action.think(to, tref);
+			if(from == HUMAN)
+				player_total_number_of_throws++;			
+		}
+		
+		//start registration of the reaction time (choice time)
+		response.start(tref);
+		
+		return tref;
+	}
+	
+	// used to change the owner of the ball at the time the ball actually arrives and not prior.
+	Timer holder { Player new; expire() { current_ball_holder = new;}}
+}

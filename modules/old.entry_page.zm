@@ -1,0 +1,173 @@
+/******************************************************************************\
+FILE:           std_entry_page1.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Provides a page object for displaying short a welcome message in a 
+big font.
+
+
+HISTORY:
+2010-11-16 TV   Created as part of the standard Zep modules.
+
+\******************************************************************************/
+
+
+Page entry_page
+{
+    bool        checkkeys;      // if set, continue keys enabled
+
+
+    init()
+    {
+        fill_pattern_color =  color:lightgray;
+    }
+
+
+    on_event:key_press()
+    {
+        if (target != null && checkkeys && 
+                (input_key == KEY_Return || input_key == ' '))
+            done(CONTINUE);
+        else
+            handle_special_key(this, input_key, input_modifiers);
+    }
+
+
+    on_event:message()
+    {
+        // Handle 'continue' message received from control page.
+        if (message_arg == CONTINUE)
+            done(CONTINUE);
+    }
+
+
+    LabelGadget message
+    {
+        init()
+        {
+            font_family = ENTRY_PAGE_MESSAGE_FONT_FAMILY;
+            font_size = ENTRY_PAGE_MESSAGE_FONT_SIZE;
+            text_color = ENTRY_PAGE_TEXT_COLOR;
+            is_wrapping = true;
+            margin = 50;
+        }
+    }
+
+
+    Timer timer
+    {
+        on_event:expire()
+        {
+            done(TIMEOUT);
+        }
+    }
+
+
+    void done(int msgid)
+    {
+        timer.abort();
+
+        checkkeys = false;
+
+        signal_target(msgid);   // Tell caller we're done.
+        target = null;
+
+        if (control.target == this)
+        {
+            control.disable_keys();
+            control.target = null;
+        }
+    }
+
+
+    //==========================================================================
+
+
+    void set_text(string txt, bool markup=false)
+    {
+        message.text = txt, markup;
+    }
+
+
+    void action_auto(dur timeout=0s, 
+        dur showdelay=-1s, dur fadedur=-1s)
+    {
+        action(null, timeout, showdelay, fadedur, false);
+    }
+
+
+    void action_auto(Object caller, dur timeout=0s, 
+        dur showdelay=-1s, dur fadedur=-1s)
+    {
+        action(caller, timeout, showdelay, fadedur, false);
+    }
+
+
+    void action(Object caller, dur timeout=0s, 
+        dur showdelay=-1s, dur fadedur=-1s, bool kbd=true)
+    {
+        timer.abort();
+
+        // Force page show delay and transition duration in sane range.
+        if (showdelay < 0s) showdelay = PAGE_TRANSITION_DELAY;
+        else showdelay = limit(showdelay, 0s, MAX_PAGE_TRANSITION_DELAY);
+        if (fadedur < 0s) fadedur = PAGE_TRANSITION_DURATION;
+        else fadedur = limit(fadedur, 0s, MAX_PAGE_TRANSITION_DURATION);
+
+    	// Clear page transition delay.
+    	page_transition_delay = 0s;
+
+	// Let's delay the first test page trial following this page.
+	first_trial_delay = FIRST_TRIAL_EXTRA_DELAY;
+
+        if (test_window1.show_page(this, now() + showdelay, fadedur) == 0)
+        {
+            // Page not yet shown. Extend timeout period (if applicable) 
+            // until page is fully visible (fade-in has finished).
+            if (timeout > 0s) 
+                timeout += expected_transition_finish_time - now();
+        }
+
+        if (caller != null)
+        {
+            checkkeys = kbd && !test_window1.is_output_only();
+            if (timeout > 0s) timer.start(now() + timeout);
+
+            target = caller;
+            control.target = this;
+            control.disable_keys();
+            control.enable_key(KEY_Return, CONTINUE);
+            control.enable_key(' ', CONTINUE);
+//          control.enable_key(KEY_Escape, CONTINUE);
+
+            if (checkkeys)
+                test_window1.activate();
+            else if (test_window1.is_output_only())
+                ctrl_window.activate();
+        }
+        else
+        {
+            checkkeys = false;
+            target = null;
+        }
+    }
+
+
+    void stop_action()
+    {
+        timer.abort();
+
+        checkkeys = false;
+
+        target = null;
+
+        if (control.target == this)
+        {
+            control.disable_keys();
+            control.target = null;
+        }
+    }
+}
