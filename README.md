@@ -30,7 +30,7 @@ Groups
 ======
 There are four groups. Only `C` does not show the conditional instructions.
 * `C` :- Control
-* `AC` :- Activi Control
+* `AC` :- Active Control
 * `POSR` :- Positive Repraisal
 * `NEGR` :- Negative Repraisal
  
