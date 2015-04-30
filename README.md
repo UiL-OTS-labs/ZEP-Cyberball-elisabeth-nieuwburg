@@ -28,9 +28,9 @@ Several 7-scale rating questions have been added see `./stimuli/rating_questions
 
 Groups
 ======
-There are four groups
-* C :- Control
-* AC :- Activi Control
-* POSR :- Positive Repraisal
-* NEGR :- Negative Repraisal
+There are four groups. Only `C` does not show the conditional instructions.
+* `C` :- Control
+* `AC` :- Activi Control
+* `POSR` :- Positive Repraisal
+* `NEGR` :- Negative Repraisal
  
