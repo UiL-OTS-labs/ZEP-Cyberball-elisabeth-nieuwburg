@@ -24,7 +24,7 @@ And are simple .csv files.
 You can now also add overlay texts to be shown at specific throws
 `./stimuli/overlay_texts/`
 
-Several 7-scale rating questions have been added.
+Several 7-scale rating questions have been added see `./stimuli/rating_questions.csv` 
 
 Groups
 ======
