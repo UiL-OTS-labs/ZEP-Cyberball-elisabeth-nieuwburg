@@ -1,1 +1,0 @@
-The file name shows the current script version. Anything 0.x means it's still in alpha and is largely undocumented! Always use the latest version you can find!
