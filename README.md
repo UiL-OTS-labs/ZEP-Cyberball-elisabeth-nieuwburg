@@ -1,4 +1,4 @@
-==Cyberball==
+*Cyberball*
 
 Cyberball is a virtual ball-toss game that can be used for research on ostracism, social exclusion or rejection. It has also been used to study discrimination and prejudice. Four players (three computer controlled and one human) play a game of tossing a ball around. After a set number of throws two of the computer-controlled players will both start to ignore another computer-controlled player.
 
