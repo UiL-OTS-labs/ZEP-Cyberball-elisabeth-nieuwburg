@@ -1,0 +1,234 @@
+// =====================================================================
+// GENERAL GAME SETTINGS
+// =====================================================================
+
+const dur MINIMUM_BOT_WAITING_TIME = 1000ms; //should be longer than the catch sound (mind you!)
+const dur MAXIMUM_BOT_WAITING_TIME = 2500ms;
+
+Player TARGET_PLAYER_AFTER_SWITCH = HUMAN; // LEFT_BOT, RIGHT_BOT, MIDDLE_BOT, HUMAN
+
+int OVERALL_MAXIMUM_ALLOWED_THROWS  = 50; // Game will finish if this is reached.
+int TARGET_PLAYER_THROWS_PRIOR_SWITCH  = 3;
+int BOT_NUMBER_OF_THROWS 			= 9; //try to keep this number a multiple of the number of 3 (=players-1).
+//This number is corrected to still reach roughly the same number of throws (*1.16) if a player is removed.
+
+
+// =====================================================================
+// SOUND SETTINGS
+// =====================================================================
+const string GAME_PAUZE_SOUND = "signal.wav";
+const string GAME_THROW_SOUND = "throw.wav";
+const string GAME_CATCH_SOUND = "catch.wav";
+
+
+// =====================================================================
+// PLAYER SETTINGS (names)
+// =====================================================================
+
+string[..][..] PLAYER_NAMES1 =
+{
+	{ //FEMALE
+		"HUMAN", 
+		"Anouk", 
+		"Denise", 
+		"Manon"
+	},
+	{ // MALE
+		"HUMAN", 
+		"Bas", 
+		"Jasper", 
+		"Willem"
+	}, 
+};
+
+string[..][..] PLAYER_NAMES2 =
+{
+	{ //FEMALE
+		"HUMAN", 
+		"Iris", 
+		"Linda", 
+		"Sanne"
+	},
+	{ // MALE
+		"HUMAN", 
+		"Wouter", 
+		"Bart", 
+		"Tom"
+	}, 
+};
+
+string[][] PLAYER_NAMES; 
+
+// =====================================================================
+// GRAPHIC SETTINGS: BALL_IMAGE
+// =====================================================================
+const string		BALL_IMAGE = "baseball.svg";
+const int 		BALL_WIDTH = 36;
+
+// =====================================================================
+// THROW SETTINGS
+// =====================================================================
+
+// settings below can range from minimum to factor*minimum
+const real 		MINIMUM_TO_MAXIMUM_FACTOR 	= 2.5;
+
+const dur 		MINIMUM_THROW_DURATION 		= 600ms;
+const dur		MINIMUM_PRE_THROW_DURATION 	= 200ms;
+const real 		MINIMUM_SPIN				= .3;
+const real 		MINIMUM_HEIGHT_INCREASE		= 2;
+
+// =====================================================================
+// GRAPHIC SETTINGS: TITLE_SCREEN
+// =====================================================================
+const string			TITLE_SCREEN_IMAGE = "title_image.svg";
+const int			TITLE_IMAGE_HEIGHT = 800; //height is dependent based on the width
+const real			TITLE_BALL_RELATIVE_X = .540;
+const real			TITLE_BALL_RELATIVE_Y = .385;
+
+// =====================================================================
+// GRAPHIC SETTINGS: BACKGROUND_IMAGE
+// =====================================================================
+const string		BACKGROUND_IMAGE = "baseball_field.svg";
+
+// The following will be used to determine the actual x and y coordinates of the pads that are in the picture:
+// the faces and gloves are drawn based on it
+const real			PLAYER_RELATIVE_X = 0.5;
+const real			PLAYER_RELATIVE_Y = 0.996;
+
+const real			LEFT_BOT_RELATIVE_X = 0.25;
+const real			LEFT_BOT_RELATIVE_Y = 0.6;
+
+const real			MIDDLE_BOT_RELATIVE_X = 0.5;
+const real			MIDDLE_BOT_RELATIVE_Y = 0.208;
+
+const real			RIGHT_BOT_RELATIVE_X = 0.75;
+const real			RIGHT_BOT_RELATIVE_Y = 0.6;
+
+// =====================================================================
+// GRAPHIC SETTINGS: FACE_IMAGE / PLAYERS
+// =====================================================================
+const int			FACE_IMAGE_WIDTH 	= int(640*0.3); //goofy picture size.
+const int			FACE_IMAGE_HEIGHT 	= int(480*0.3);
+const int			FACE_IMAGE_SPACING 	= 10;
+
+string NO_PLAYER_NAME 			= "No Player";
+string NO_PLAYER_FACE_FILENAME 		= "disconnected.png";
+
+string[..][..] player_faces1 =
+{
+	{
+		"",
+		"1female1.png",
+		"1female2.png",
+		"1female3.png",
+	},
+	{
+		"",
+		"1male1.png",
+		"1male2.png",
+		"1male3.png",
+	},
+};
+
+string[..][..] player_faces2 =
+{
+	{
+		"",
+		"2female1.png",
+		"2female2.png",
+		"2female3.png",
+	},
+	{
+		"",
+		"2male1.png",
+		"2male2.png",
+		"2male3.png",
+	},
+};
+
+string[][] player_faces;
+
+
+// =====================================================================
+// GRAPHIC SETTINGS: NAMES
+// =====================================================================
+const string    			NAME_FONT_FAMILY 		= FONT_FAMILY_SERIF;
+const real      			NAME_FONT_SIZE    		= FONT_SIZE_LARGE;
+const color			NAME_FONT_COLOR			= color:white;
+const color			NAME_BOX_COLOR			= color:cud_orange;
+const int			NAME_SPACING_VER 		= 20;
+
+// =====================================================================
+// GRAPHIC SETTINGS: GLOVE_IMAGE
+// =====================================================================
+
+const int			GLOVE_IMAGE_SPACING_HOR = 110;
+const int			GLOVE_IMAGE_SPACING_VER = 100;
+const int			GLOVE_IMAGE_WIDTH 		= 90;
+const int			GLOVE_IMAGE_HEIGHT 		= 90;
+const real 			GLOVE_IMAGE_REL_SIZE    = 1; // used in the choice page
+
+string[..][..] GLOVE_PICTURES =
+{
+	{ // LEFT
+		"glove_left_1.png",
+		"glove_left_2.png",
+		"glove_left_3.png",
+		"glove_left_4.png",
+		"glove_left_5.png",
+		"glove_left_6.png",
+	},
+	{ // RIGHT
+		"glove_right_1.png",
+		"glove_right_2.png",
+		"glove_right_3.png",
+		"glove_right_4.png",
+		"glove_right_5.png",
+		"glove_right_6.png",
+	}
+};
+
+record OverlayText
+{
+	int throw;
+	TestGroup group;
+	string text;
+}
+
+OverlayText[..] overlay_texts;
+
+void empty_overlay_texts()
+{
+	overlay_texts.size = 0;
+}
+void load_overlay_texts(string filename)
+{
+
+	string path = stimuli_dir() + "overlay_texts/" + filename;
+
+	if(!file_exists(path))
+		println("Could not find custom defined throws: " + path);
+	else
+	{
+		overlay_texts.load(path,
+			true,           // if true, file contains a header row
+			1);             // number of lines to skip before header and data
+	}
+}
+
+void set_game_settings()
+{
+	setupPlayers();
+	game_page.game_status.players_have_been_initiated = true;
+}
+
+void initiate_game()
+{
+	graphic_layout.setup();
+	game_page.game_status.graphics_have_been_initiated = true;
+}
+
+void set_maximum_throws(int throws)
+{
+	OVERALL_MAXIMUM_ALLOWED_THROWS = throws;
+}

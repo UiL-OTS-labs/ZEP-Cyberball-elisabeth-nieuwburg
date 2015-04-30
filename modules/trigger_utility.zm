@@ -1,0 +1,111 @@
+const dur TRIGGER_DURATION= 10ms;
+
+Trigger[..] trigger_log;
+
+Timer trigger_sender
+{
+	void fire(int trigger_number)
+	{
+		if(!SEND_TRIGGERS)
+			return;
+
+		control.button_box.output(1 << trigger_number);
+		println(" Firing trigger: " + trigger_number);
+		start(now()+TRIGGER_DURATION);
+	}
+
+	on_event:expire()
+	{
+		control.button_box.output(0);
+	}
+}
+
+Timer trigger_delay_timer
+{
+	int trigger_number;
+
+	void arm(time tref, int trigger_number)
+	{
+		this.trigger_number = trigger_number;
+		start(tref);
+	}
+
+
+	on_event:expire()
+	{
+		trigger_sender.fire(trigger_number);
+	}
+}
+
+record Trigger
+{
+	time time_trigger;
+	int trigger_number;
+	string note;
+}
+
+void reset_trigger_log()
+{
+	trigger_log.size=0;
+}
+
+void setup_trigger_system()
+{
+	control.button_box.open();
+}
+
+void send_trigger(int trigger_number, string note = "")
+{
+	send_trigger_immediately(trigger_number, note);
+}
+
+void send_trigger(time tref, int trigger_number, string note = "")
+{
+	if(trigger_number > 255)
+	{
+		println("Trigger number above 255, setting to 255");
+		trigger_number = 255;
+	}
+
+	trigger_delay_timer.arm(tref, trigger_number);
+	log_trigger(trigger_delay_timer.expected_expire_time, trigger_number, note);
+}
+
+void send_trigger_immediately(int trigger_number, string note = "")
+{
+	trigger_sender.fire(trigger_number);
+	log_trigger(now(), trigger_number, note);	
+}
+
+void log_trigger(time tref, int trigger_number, string note = "")
+{
+	Trigger trig;
+	trig.time_trigger = tref;
+	trig.trigger_number = trigger_number;
+	trig.note = note;
+
+	output_append_trigger_log(trig);
+}
+
+void output_append_trigger_log(Trigger trig)
+{
+	trigger_log.size = trigger_log.size+1;
+	trigger_log[trigger_log.size-1] = trig;
+}
+
+void trigger_log_save_to_db_and_reset()
+{
+	string fn = expdb.experiment.session.create_table(namespace_name, 3);
+	trigger_log.append(fn, "Trigger overview");
+}
+
+void send_round_trigger(RoundStatus type)
+{
+	println("ROUND: " + game::game_page.game_status.round_nr + "\t" + type);
+	send_trigger_immediately(ROUND_TRIGGERS[game::game_page.game_status.round_nr -1][type], "ROUND");
+}
+
+void send_rating_trigger(int id)
+{
+	send_trigger_immediately(RATING_TRIGGERS_PER_ID[id], "RATING");
+}

@@ -1,21 +1,10 @@
-/******************************************************************************\
-FILE:           shuffle.zm
-AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
-ADAPTED BY:     -
-
-ABOUT: shuffles the list of throws.
-
-HISTORY:
-2014-07-31 CvR   Created.
-
-\******************************************************************************/
 
 // Shuffles test_items table according to following criterion:
 //   - Two subsequent items may not have same type.
 
-int shuffle_list(Player[] throw_list, int player)
+int shuffle_list(game::Player[] throw_list, int player)
 {
-    if(bot_action.bot_targets[player].size < 3) // not much use if there are only or less targets! =/
+    if(game::bot_action.bot_targets[player].size < 3) // not much use if there are only two or less targets! =/
     {
 		throw_list.shuffle(0,-1);
 		return OK;

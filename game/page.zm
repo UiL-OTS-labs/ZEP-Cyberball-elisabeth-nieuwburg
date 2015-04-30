@@ -1,0 +1,367 @@
+
+import players;
+import settings;
+import animators;
+import bots;
+import layout;
+
+plugin zep_file;
+
+
+record GameSettings
+{	
+	char        left_bot_key;
+	char        middle_bot_key;
+    	char        right_bot_key;
+
+    	string 	glove_choice;
+
+    	bool log_throws;
+    	bool do_switch;
+}
+
+record GameStatus
+{
+	Player current_ball_holder;
+	int round_nr;
+	bool round_finished;
+	int total_number_of_throws; 
+	int target_player_total_number_of_throws;
+	bool graphics_have_been_initiated;
+	bool players_have_been_initiated;
+	bool switched_behaviour;
+}
+
+Page game_page
+{
+	PlayerRecord[..] players_list;
+
+	GameSettings game_settings;
+	GameStatus game_status;
+
+	init()
+	{
+		game_settings.left_bot_key = KEY_Left;           	// key for left bot
+		game_settings.middle_bot_key = KEY_Up;           	// key for middle bot
+		game_settings.right_bot_key = KEY_Right;           // key for right bot
+		game_settings.do_switch = false;
+	}
+
+	on_event:key_press()
+	{
+		if (input_key == KEY_Escape) // goes to the next step
+			leave_game();
+		if(!animating() && !game_status.round_finished)
+			{
+				// if the animation hasn't played yet and enter was pressed:
+				if(input_key == KEY_Return && !animator_intro.played)
+				{
+					//begin the INTRO! 			
+					time tref = animator_intro.begin(event_time);
+					if(game_status.current_ball_holder == HUMAN)
+					 	response.start(tref+100ms);
+					 else
+					 	bot_action.think(game_status.current_ball_holder, tref);	
+				}						
+				else if(animator_intro.played && game_status.current_ball_holder == HUMAN) // if it has played and the HUMAN (leaking meatsack) is holding the ball...
+					{
+						handle_player_choice(input_key, event_time);
+						response.process_throw_rt(event_time);
+					}
+			}
+	}
+ 
+	// A player made achoice, so handle it!
+	void handle_player_choice(char key, time tref)
+	{
+		if(key == game_settings.left_bot_key)
+			throw(HUMAN, LEFT_BOT, tref);
+		if(key == game_settings.middle_bot_key)
+			throw(HUMAN, MIDDLE_BOT, tref);
+		if(key == game_settings.right_bot_key)
+			throw(HUMAN, RIGHT_BOT, tref);
+	}
+
+	// Object for response handling.
+	Response response
+	{
+		int rt;
+		
+		int process_throw_rt(time t)
+		{
+			
+
+			HitType validity = hit(t);
+
+			// Accept the first hit in the response interval and end the
+			// response interval.
+			if (validity == HIT_VALID)
+			{
+				rt = int(reaction_time(0));
+				ignore_remaining_hits();
+				stop();
+			}
+			else if (validity == HIT_TOO_EARLY || validity == HIT_TOO_LATE)
+			{
+			// False alarm. Deal with this if desired.
+			}
+			return rt;
+		}
+	}
+ 
+ 
+    	// Performs preparatory work required before using this page.
+	void generate_throws()
+	{
+		// initialise the possible throws based on bot_targets
+		bot_action.setup_bot_throws();		
+	}
+	
+	void enable_switch()
+	{
+		game_settings.do_switch = true;
+	}
+
+	void disable_switch()
+	{
+		game_settings.do_switch = false;
+	}
+
+	void load_custom_throws(string filename)
+	{
+		string path = stimuli_dir() + "throws/" + filename;
+
+		if(!file_exists(path))
+			println("Could not find custom defined throws: " + path);
+		else
+		{
+			bot_action.bot_throw_stack.load(path,
+				true,           // if true, file contains a header row
+				1);             // number of lines to skip before header and data
+		}
+	}
+ 
+    // Performs cleaning up if necessary.
+    void cleanup()
+    {
+    	if(game_status.switched_behaviour)
+    		bot_action.add_player_to_bot_targets(TARGET_PLAYER_AFTER_SWITCH);
+
+    	reset_throw_log();
+    	empty_overlay_texts();
+    	enable_switch();
+
+    	game_status.round_finished = false;
+    	game_status.switched_behaviour = false;
+    	game_status.total_number_of_throws = 0;
+    	game_status.target_player_total_number_of_throws = 0;
+    	game_status.round_nr = -9999;
+
+    }
+ 
+    // Starts the game.
+	void enter_game(Object caller, time tref, bool play_intro = false)
+	{
+		if(!game_status.players_have_been_initiated || !game_status.graphics_have_been_initiated)
+			ctrl_window.error_dialog.action("ERROR: either the graphics or the players weren't correctly setup.", true);
+
+		if(!play_intro)
+			graphic_layout.l2.disable_intro();
+		
+		// Show this page (if not yet done) and make tref the trial start time.
+		tref = test_window1.show_test_page(this, tref);
+			
+		 // Remember who to signal when the trial is over.
+		target = caller;
+
+		if(!play_intro)
+		{
+			if(game_status.current_ball_holder == HUMAN)
+			 	response.start(tref+100ms); // inacturate anyway because of the start of a round
+			 else
+			 	bot_action.think(game_status.current_ball_holder, tref);
+		}
+	}
+    
+    	// Aborts any ongoing activity on this page and signals the initiator
+    	// of the trial that we're done.
+	void leave_game()
+	{		
+		audio.abort();
+		audio_throw.abort();
+
+		delay_continue.start(now() + 500ms);
+	}
+
+	Timer delay_continue
+	{
+		on_event:expire()
+		{
+			signal(game_page.target, CONTINUE);   // tell caller we're done
+			game_page.target = null;
+			control.clear_status();
+		}
+	}
+    
+	// Changes the behaviour of the bots by excluding a single player from the other bots target pools.
+	void switch_bot_behaviour()
+	{
+		send_round_trigger(EXCLUSION);
+
+		// resets the player count so the game can end when the player has thrown a set amount of balls POST switch
+		game_status.target_player_total_number_of_throws = 0;
+		
+		// removes the player from the possible targets of the other bots
+		bot_action.remove_player_from_bot_targets(TARGET_PLAYER_AFTER_SWITCH);
+		
+		// resets the possible throws based on bot_targets, now with the excluded removed from the targets
+		bot_action.setup_bot_throws();	
+		
+		// sets the number of throws of the excluded player at 0 so it is not registered as still having throws								
+		bot_action.clear_bot_throws(TARGET_PLAYER_AFTER_SWITCH);	
+		
+		game_status.switched_behaviour = true;
+	}
+    	
+    	string find_overlay_text_for_throw(int throw_index)
+    	{
+    		if(overlay_texts.size == 0)
+    			return "";
+    		
+    		int index = 0;
+    		while(index <overlay_texts.size )
+    		{
+    			if(throw_index == overlay_texts[index].throw && overlay_texts[index].group == selected_group)
+    				return overlay_texts[index].text;
+    			index++;
+    		}
+    		return " ";
+    	}
+
+	// reports and checks if we need to do anything regarding the status of the game, returns in the round should be stopped.
+	bool check_game_status()
+	{
+			string text = find_overlay_text_for_throw(game_status.total_number_of_throws);
+			graphic_layout.overlay_text(text);
+
+			bool round_is_finished = true;
+			if(a_switch_is_needed()) // init the switch!
+			{
+				println("SWITCH IS BEING MADE: " + game_status.total_number_of_throws + " total throws. " + game_status.target_player_total_number_of_throws + " player throws." );
+				switch_bot_behaviour();
+				return !round_is_finished;
+			}
+			else if(game_is_finished() ) // init the end-game
+			{
+				println("ROUND/GAME IS FINISHED: " + game_status.total_number_of_throws + " total throws. " + game_status.target_player_total_number_of_throws + " player (reset at switch)." );
+				leave_game();
+				return round_is_finished;
+			}
+			return !round_is_finished;
+	}
+	
+	bool a_switch_is_needed()
+	{
+		if(!game_settings.do_switch || game_status.switched_behaviour)
+			return false;
+
+		if(game_status.target_player_total_number_of_throws >= TARGET_PLAYER_THROWS_PRIOR_SWITCH)
+			return true;
+
+		return false;
+	}
+
+
+	bool game_is_finished()
+	{
+		if(game_settings.do_switch && !game_status.switched_behaviour)
+			return false;
+
+		if(!bot_action.still_throws_registered() || game_status.total_number_of_throws >=  OVERALL_MAXIMUM_ALLOWED_THROWS)
+			return true;
+
+		return false;
+	}
+
+	// actually makes a throw from one player to the next. Including logging it and setting up the animation.
+	time throw(Player from, Player to, time tref)
+	{
+			
+		send_trigger(tref, THROW_TRIGGERS[from][to], "Throw");
+
+		
+		// the next few lines generate a somewhat random throw parameters based on minimum and maximum settings.
+		real factor = real( random(10, int( (MINIMUM_TO_MAXIMUM_FACTOR-1) * 10 )))  / 10;
+		dur pre_throw_duration = MINIMUM_PRE_THROW_DURATION * factor;
+		real pre_throw_move = .1 * random(1,5);
+		
+		int dir = random(0,3) <= 1 ? -1 : 1;
+		real spins = MINIMUM_SPIN * factor * dir;
+		dur throw_duration = MINIMUM_THROW_DURATION * factor;
+		real height = MINIMUM_HEIGHT_INCREASE * (factor-1);
+
+		tref = animator_glove.begin(from, pre_throw_duration, pre_throw_move, tref);
+		audio_throw.play(pre_throw_duration, throw_duration, tref); // it sounds better if the woosh is played right after the ball starts traveling
+		
+		tref =  animator_throw.begin(
+					players_list[from].x, //x0
+					players_list[from].y, //y0
+					players_list[to].x, //x1
+					players_list[to].y, //y1
+					throw_duration, //how long to throw
+					spins, // number of spins
+					height, // height
+					tref+10ms //when to start the animation
+				); 
+
+		if(from == TARGET_PLAYER_AFTER_SWITCH)
+			game_status.target_player_total_number_of_throws++;
+
+		if(to==HUMAN)
+			response.start(tref);			
+
+		game_status.total_number_of_throws++;
+		control.set_status("Throw: " + game_status.total_number_of_throws);
+		log_throw(from, to, tref);
+
+		// wait with the switch till until the ball has arrived.
+		at_arrival_ball.new_holder = to;
+		at_arrival_ball.start(tref); 
+
+		return tref;
+	}
+	
+	// used to change the owner of the ball at the time the ball actually arrives and not prior.
+	Timer at_arrival_ball { Player new_holder; expire() 
+		{ 
+			game_status.current_ball_holder = new_holder;
+
+			game_status.round_finished = check_game_status();
+
+			//setup new actions based on the to and from
+			if(!game_status.round_finished && new_holder != HUMAN)
+				bot_action.think(new_holder, now());
+			
+		}}
+
+	void log_throw(Player from, Player to, time tref)
+	{
+		if(game_settings.log_throws)
+			return;
+		else
+		{
+			ThrowSummary throw;
+			throw.round_nr = game_status.round_nr;
+			throw.throw_nr = game_status.total_number_of_throws;
+			throw.switched = game_status.switched_behaviour;
+			throw.from = from;
+			throw.to = to;
+			if(from==HUMAN)
+				throw.RT = response.rt;
+			else
+				throw.RT = -99;
+
+			output_append_throwsummary(throw); //appends the throw, save happens at the thank you part of the experiment!
+		}
+	}
+}

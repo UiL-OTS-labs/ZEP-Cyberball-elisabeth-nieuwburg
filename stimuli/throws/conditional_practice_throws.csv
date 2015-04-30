@@ -1,0 +1,5 @@
+###Index refers to the bot. 1 = left, 2 = middle, 3 = right. is read from bottom to top. ###;
+index;Player
+1;RIGHT_BOT
+2;LEFT_BOT
+3;MIDDLE_BOT

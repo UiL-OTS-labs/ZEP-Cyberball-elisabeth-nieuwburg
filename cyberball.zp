@@ -27,65 +27,297 @@ import std_windows1;
 import std_exit_page1;
 
 //specific modules
-import game_page;
+import trigger_utility;
+import trigger_settings;
+
+import game::page;
+import rating::rate;
+
 import participant;
 import glove_choice_page;
 import pause_page;
-import texts;
-
+import texts_en;
 import output;
+import grouping;
 
 
 Experiment experiment
-{
-	string glove_of_choice;
-	
-	Sex player_sex;
-	int middle_player_face;
-	
-    on_event:entry()
-    {	
-		//~ control.button_box.open();  
-	    //~ control.button_box.output(0x02); // If necessary set parallel port line D0 to power button box device. (sometimes nesc. for laptop or PCI based cards		
+{	
+	on_event:entry()
+	{	
 		if(check_participant_fields() == ERROR)
 		{
-			println("ERROR:\tGENDER(male|female|other) and control_variable (1|2|3) not set. Please set these in Participant >> Edit!");
+			println("ERROR:\tGENDER(male|female) and control_variable (1|2|3) not set. Please set these in Participant >> Edit.");
 			terminate;
 		}
 		
+		setup_trigger_system();
 		show_test_windows();
-		if(expdb.participant.get_enum_field("gender") == "male")
-			player_sex = MALE;
-		else if(expdb.participant.get_enum_field("gender") == "female")
-			player_sex = FEMALE;
-		else if(expdb.participant.get_enum_field("gender") == "other")
-		{
-			player_sex = random(0,2)? MALE : FEMALE;
-		}
-		middle_player_face = expdb.participant.get_int_field("control_variable");
-    }
-        
-    Part welcome
-    {
-        on_event:entry()
-        {
-			entry_page.hide_cursor();
-            entry_page.set_text(INTRODUCTION_TEXT);
-            entry_page.action(this, 0s);
-        }
-        on_event:exit()
-        {
-			entry_page.show_cursor();
-		}
-    }
-    
-    Part instruction // instruction
+
+		entry_page.hide_cursor();
+		pause_page.hide_cursor();
+		blank_page.hide_cursor();
+		exit_page.hide_cursor();
+		game::game_page.hide_cursor();
+		
+	}
+
+	Part welcome
 	{
 		on_event:entry()
-        {
+		{
+			entry_page.set_text(INTRODUCTION_TEXT);
+			entry_page.action(this, 0s);
+		}
+	}
+    
+	Part instruction // instruction
+	{
+		on_event:entry()
+		{
 			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
-			pause_page.set_text(INSTRUCTION_TEXT, true);
+			pause_page.set_text(INTRODUCTION_TEXT, true);
 			pause_page.action(this);
+		}
+	}
+	
+	
+	Part instruction_practice// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_PRACTICE_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part glove_select //glove selection
+	{
+		on_event:entry()
+		{
+			glove_choice_page.set_text(GLOVE_SELECTION_TEXT, true);
+			glove_choice_page.auto_action(this,1s);
+		}
+
+		on_event:exit()
+		{	
+			game::PLAYER_NAMES = game::PLAYER_NAMES1;
+			game::player_faces = game::player_faces1;
+
+			game::set_game_settings();
+			game::initiate_game();
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+	
+	Part practice
+	{
+		int old_max_throws;
+
+		on_event:entry()
+		{
+			game::game_page.load_custom_throws("practice_throws.csv");
+			game::set_maximum_throws(3);
+			game::load_overlay_texts("practice_texts.csv");
+			game::game_page.disable_switch();
+			game::game_page.game_status.current_ball_holder = game::HUMAN;
+			game::game_page.enter_game(this, event_time, true);
+		}
+		on_event:exit()
+		{
+			game::game_page.cleanup();
+			game::set_maximum_throws(55);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+	
+
+	Part instruction_rating1// instruction
+	{
+		on_event:entry()
+		{
+			SEND_TRIGGERS = true;
+			send_trigger_immediately(START_EXPERIMENT, "EXP START");
+			
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_RATING1_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part rating1
+        	{
+        		on_event:entry()
+        		{
+        			rating::action(this,0);
+        		}
+        	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part instruction_round1// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_ROUND1_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part round1_fair
+	{
+		on_event:entry()
+		{
+
+			game::game_page.disable_switch();
+			game::game_page.generate_throws();
+
+			game::game_page.game_status.round_nr = 1;
+			send_round_trigger(START);
+
+			game::game_page.game_status.current_ball_holder = game::HUMAN;
+			game::game_page.enter_game(this, event_time, false);
+		}
+
+		on_event:exit()
+		{
+			create_roundsummary();
+	 		roundsummary_save_to_db_and_reset();
+	 		throwsummary_save_to_db_and_reset();
+	 		trigger_log_save_to_db_and_reset();
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part instruction_rating2// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_RATING2_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part rating2
+        	{
+        		on_event:entry()
+        		{
+        			rating::action(this, game::game_page.game_status.round_nr);
+        		}
+        		on_event:exit()
+        		{
+        			send_round_trigger(END);
+        			game::game_page.cleanup();
+        		}
+        	}
+
+        	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part round2_instruction// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_ROUND2_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+	
+	
+	Part round2_unfair1
+	{
+		on_event:entry()
+		{
+			game::game_page.generate_throws();
+			game::game_page.game_status.round_nr = 2;
+			send_round_trigger(START);
+			game::game_page.enable_switch();
+			game::game_page.game_status.current_ball_holder = game::HUMAN;
+			game::game_page.enter_game(this, event_time, false);
+		}
+
+		on_event:exit()
+		{
+			create_roundsummary();
+	 		roundsummary_save_to_db_and_reset();
+	 		throwsummary_save_to_db_and_reset();
+	 		trigger_log_save_to_db_and_reset();
 		}
 	}
 	
@@ -96,106 +328,284 @@ Experiment experiment
 			blank_page.action_auto(this, 500ms, 500ms);
 		}
 	}
-	
-    Part glove_select //glove selection
-    {
-		on_event:entry()
-		{
-			glove_choice_page.set_text(GLOVE_SELECTION_TEXT, true);
-			glove_choice_page.auto_action(this,1s);
-		}
-	}
-	
-	Block round0 //practice time the game starts
-    {
-		on_event:entry()
-		{
-			game_page.hide_cursor();
-			game_page.setup(glove_choice_page.chosen_name, player_sex, glove_choice_page.chosen_glove, middle_player_face, true);
-			game_page.start_game(this, reference_time, true);
-		}
-		on_event:exit()
-		{
-			game_page.show_cursor();
-		}
-	}
 
-	Part instruction2 // instruction after practice
-	{
-		on_event:entry()
-        {
-			pause_page.fill_pattern_color = rgbi:0/168/55;
-			pause_page.set_text(INSTRUCTION2_TEXT, true);
-			pause_page.action(this, 0s, 500ms, 500ms, true, 5s);
-		}
-	}
-
-    Block round1 //first time the game starts
-    {
-		on_event:entry()
-		{
-			game_page.hide_cursor();
-			game_page.setup(glove_choice_page.chosen_name, player_sex, glove_choice_page.chosen_glove, middle_player_face);
-			game_page.start_game(this, reference_time);
-		}
-		on_event:exit()
-		{
-			game_page.show_cursor();
-		}
-	}
-	
-	Part // previous part likely exited with a pause set.
+	Part instruction_rating3// instruction
 	{
 		on_event:entry()
 		{
-			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0)
-			{	
-				pause_page.fill_pattern_color = rgbi:0/168/55; // very specific color that matches the background used.
-				pause_page.set_text(PAUZE_TEXT);
-				pause_page.action(this, 0s, 500ms, 500ms, true, 10s);
-			} else signal(this, CONTINUE);
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_RATING3_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part rating3
+        	{
+        		on_event:entry()
+        		{
+        			rating::action(this, game::game_page.game_status.round_nr);
+        		}
+        		on_event:exit()
+        		{
+        			send_round_trigger(END);
+        			game::game_page.cleanup();
+        		}
+        	}
+
+        	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
 		}
 	}
 	
-	Block round2 //second time the game starts
-    {
-		on_event:entry()
+	Block conditional_block
+	{
+		Part conditional_instruction
 		{
-			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0)
+			on_event:entry()
 			{
-				game_page.hide_cursor();
-				game_page.start_game(this, reference_time);
-			} else signal(this, CONTINUE);
+				if(selected_group == C)
+					signal(this,CONTINUE);
+				else
+				{
+					pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+					pause_page.set_text(CONDITIONAL_INSTRUCTION_TEXT, true);
+					pause_page.action(this);
+				}
+			}
 		}
-		
-		on_event:exit()
+
+		Part conditional_practice
 		{
-			if(PLAYER_THROWS_AT_WHICH_TO_PAUSE >= 0)
-				game_page.show_cursor();
+			on_event:entry()
+			{
+				if(selected_group == C)
+					signal(this,CONTINUE);
+				else
+				{
+					game::game_page.load_custom_throws("conditional_practice_throws.csv");
+					game::load_overlay_texts("conditional_practice_overlaytexts.csv");
+					game::game_page.game_status.round_nr = 0;
+
+					game::game_page.disable_switch();
+					game::game_page.game_status.current_ball_holder = game::MIDDLE_BOT;
+					game::game_page.enter_game(this, event_time, false);
+				}
+			}
+
+			on_event:exit()
+			{
+				game::game_page.cleanup();
+			}
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part round3_instruction// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_ROUND3_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
 		}
 	}
 	
-	 Part thankyou
-    {
-        on_event:entry()
-        {			
-			//wrap things up: create a game_summary based on the throw details (game_output2):
-			make_game_summary(game_output2);
-			
-			//time to put the results into actual datafiles (should I do this earlier to better handle data-persistence when the game crashes?)
-			test_output_save();
-			
-			control.end_experiment();   // Check-in session.
-			
-			exit_page.hide_cursor();
-			exit_page.fill_pattern_color = rgbi:0/168/55;
+	
+	Part round3_unfair2
+	{
+		on_event:entry()
+		{
+			game::game_page.generate_throws();
+			game::game_page.game_status.round_nr = 3;
+
+			send_round_trigger(START);
+			game::game_page.enable_switch();
+			game::game_page.game_status.current_ball_holder = game::HUMAN;
+			game::game_page.enter_game(this, event_time, false);
+		}
+
+		on_event:exit()
+		{
+			create_roundsummary();
+	 		roundsummary_save_to_db_and_reset();
+	 		throwsummary_save_to_db_and_reset();
+	 		trigger_log_save_to_db_and_reset();
+		}
+	}
+	
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part instruction_rating4// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_RATING4_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part rating4
+        	{
+        		on_event:entry()
+        		{
+        			rating::action(this, game::game_page.game_status.round_nr);
+        		}
+        		on_event:exit()
+        		{
+        			send_round_trigger(END);
+        			game::game_page.cleanup();
+        		}
+        	}
+
+        	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part round4_instruction// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_ROUND4_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+	
+	Part round4_procoscial
+	{
+		on_event:entry()
+		{	
+			game::PLAYER_NAMES = game::PLAYER_NAMES2;
+			game::player_faces = game::player_faces2;
+
+			game::set_game_settings();
+			game::initiate_game();
+
+			game::TARGET_PLAYER_AFTER_SWITCH = game::MIDDLE_BOT;
+			game::BOT_NUMBER_OF_THROWS = int(game::BOT_NUMBER_OF_THROWS * 1.17);
+			game::game_page.generate_throws();
+			game::game_page.game_status.round_nr = 4;
+			send_round_trigger(START);
+			game::game_page.enable_switch();
+			game::game_page.game_status.current_ball_holder = game::HUMAN;
+			game::game_page.enter_game(this, event_time, false);
+		}
+
+		on_event:exit()
+		{
+			create_roundsummary();
+	 		roundsummary_save_to_db_and_reset();
+	 		throwsummary_save_to_db_and_reset();
+			trigger_log_save_to_db_and_reset();
+		}
+	}
+	
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part instruction_rating5// instruction
+	{
+		on_event:entry()
+		{
+			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+			pause_page.set_text(INSTRUCTION_RATING5_TEXT, true);
+			pause_page.action(this);
+		}
+	}
+
+	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part rating5
+        	{
+        		on_event:entry()
+        		{
+        			rating::action(this, game::game_page.game_status.round_nr);
+        		}
+        		on_event:exit()
+        		{
+        			send_round_trigger(END);
+        			send_trigger_immediately(END_EXPERIMENT, "EXP FINISH");
+        			game::game_page.cleanup();
+        		}
+        	}
+
+        	Part
+	{
+		on_event:entry()
+		{
+			blank_page.action_auto(this, 500ms, 500ms);
+		}
+	}
+
+	Part thankyou{
+		on_event:entry()
+		{
 			exit_page.set_text(THANK_YOU_TEXT);
 			exit_page.action(this, 5s, 500ms, 500ms);
-        }
-        
-        on_event:exit()
-        {
-			exit_page.show_cursor();
 		}
-    }
+	}
 }

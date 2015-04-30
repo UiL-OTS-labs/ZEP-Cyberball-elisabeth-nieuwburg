@@ -1,40 +1,29 @@
-/******************************************************************************\
-FILE:           output.zm
-AUTHOR:         chris van Run (UiL-OTS)
-ADAPTED BY:     -
+import game::players;
+import game::page;
 
-DESCRIPTION:
-
-Defines the formats of output table(s).
-
-
-HISTORY:
-2014-06-20 CvR   Created.
-
-\******************************************************************************/
-record GameSummary
+record RoundSummary
 {
-	bool		switched;
-	bool 		paused;
+	int round_nr;
+	bool			switched;
 	
 	int			first_throw_nr;
 	
 	int			player_to_left;
 	int			player_to_middle;
 	int			player_to_right;
-	
+
 	int 		left_to_middle;
 	int 		left_to_player;
 	int 		left_to_right;
-	
+
 	int 		middle_to_right;
 	int			middle_to_player;
 	int 		middle_to_left;
-	
+
 	int 		right_to_middle;
 	int 		right_to_player;
 	int 		right_to_left;
-	
+
 	int			player_received;
 	int			left_received;
 	int			middle_received;
@@ -44,151 +33,185 @@ record GameSummary
 // Test phase output table record, defining what is to be logged
 record ThrowSummary
 {
+	int 			round_nr;
+
 	int			throw_nr;
 	
-	bool		switched;
-	bool 		paused;
+	bool			switched;
 	
-	Player		from;
-	Player		to;
+	game::Player		from;
+	game::Player		to;
 	
 	int			RT;
 }
 
-//used by functions, stupid global zep thingy
-GameSummary game_summary;
+RoundSummary[..] game_summaries;
 
-// Game summary output table 1.
-GameSummary[..] game_output1;
-
-// Throw summary output table 1.
-ThrowSummary[..] game_output2;
+ThrowSummary[..] throw_summaries;
 
 //------------------------------------------------------------------------------
 
-
-// Appends one row of data to test phase output table 1.
-void test_output_append(GameSummary data)
+void output_append_throwsummary(ThrowSummary data)
 {
-    game_output1.size = game_output1.size + 1;
-    game_output1[game_output1.size-1] = data;
+    throw_summaries.size = throw_summaries.size + 1;
+    throw_summaries[throw_summaries.size-1] = data;
 }
 
-void test_output_append(ThrowSummary data)
+void output_append_roundsummary(RoundSummary data)
 {
-    game_output2.size = game_output2.size + 1;
-    game_output2[game_output2.size-1] = data;
+    game_summaries.size = game_summaries.size + 1;
+    game_summaries[game_summaries.size-1] = data;
 }
 
+void create_roundsummary()
+{
+	RoundSummary before_switch = make_roundsummary_from_before_switch();
+	RoundSummary after_switch = make_roundsummary_from_after_switch();
 
-// Writes test phase output table 1 contents to CSV file and clears the table.
-void test_output_save()
+	output_append_roundsummary(before_switch);
+	output_append_roundsummary(after_switch);
+}
+
+void throwsummary_save_to_db_and_reset()
 {
     // Append table to CSV file (create if non-existent). The filename 
     // format is: <dbname>/<dbnum>/<expname>/ses<sesid>-<tblnum>.csv
-    game_output1.append(expdb.experiment.session.table_filename(1), "Game Summary");
-    game_output1.size = 0;
-    game_output2.append(expdb.experiment.session.table_filename(2), "Throw Summary");
-    game_output2.size = 0;
+     string fn = expdb.experiment.session.create_table(namespace_name, 1);
+   throw_summaries.append(fn, namespace_name + "Throw Overview");
+   throw_summaries.size = 0;
 }
 
-void make_game_summary(ThrowSummary[] throws)
+// Writes test phase output table 1 contents to CSV file and clears the table.
+void roundsummary_save_to_db_and_reset()
+{
+    // Append table to CSV file (create if non-existent). The filename 
+    // format is: <dbname>/<dbnum>/<expname>/ses<sesid>-<tblnum>.csv
+    string fn = expdb.experiment.session.create_table(namespace_name, 2);
+    game_summaries.append(fn, namespace_name + "Round Overview");
+    game_summaries.size = 0;
+}
+
+
+
+RoundSummary make_roundsummary_from_before_switch()
 {	
+	ThrowSummary[] throws = throw_summaries;
+	RoundSummary[..] round_summary; round_summary.size=1; //fix around not being able to pass by reference.
+	round_summary[0].switched = false;
+	round_summary[0].round_nr = game::game_page.game_status.round_nr;
+
 	int i = 0;
 	while(i < throws.size)
 	{
 		ThrowSummary throw = throws[i];
-		if( i == 0)
-			reset_game_summary(throw.switched, throw.paused, throw.throw_nr);			
-		else if( throws[i-1].paused != throw.paused || throws[i-1].switched != throw.switched ) // check if a game status was changed, if so, append and reset the game_summary.
-		{		
-			test_output_append(game_summary);
-			reset_game_summary(throw.switched, throw.paused, throw.throw_nr);
-		} 
-		add_throw_to_summary(throw);
+		if(!throw.switched)
+			add_throw_to_summary(throw,round_summary);
 		i++;
 	}
 	
-	test_output_append(game_summary);
+	return round_summary[0];
 }
 
-void add_throw_to_summary( ThrowSummary throw )
+RoundSummary make_roundsummary_from_after_switch()
 {
-	if( throw.from == HUMAN)
+	ThrowSummary[] throws = throw_summaries;
+	RoundSummary[..] round_summary; round_summary.size=1;
+	round_summary[0].switched = true;
+	round_summary[0].round_nr = game::game_page.game_status.round_nr;
+
+	int i = 0;
+	while(i < throws.size)
 	{
-		if(throw.to == LEFT_BOT)
-			game_summary.player_to_left++;
-		else if(throw.to == MIDDLE_BOT)
-			game_summary.player_to_middle++;
-		else if(throw.to == RIGHT_BOT)
-			game_summary.player_to_right++;
+		ThrowSummary throw = throws[i];
+		if(throw.switched)
+			add_throw_to_summary(throw,round_summary);
+		i++;
 	}
 	
-	else if( throw.from == LEFT_BOT)
-	{
-		if(throw.to == HUMAN)
-			game_summary.left_to_player++;
-		else if(throw.to == MIDDLE_BOT)
-			game_summary.left_to_middle++;
-		else if(throw.to == RIGHT_BOT)
-			game_summary.left_to_right++;
-	}
-	
-	else if( throw.from == MIDDLE_BOT)
-	{
-		if(throw.to == LEFT_BOT)
-			game_summary.middle_to_left++;
-		else if(throw.to == HUMAN)
-			game_summary.middle_to_player++;
-		else if(throw.to == RIGHT_BOT)
-			game_summary.middle_to_right++;
-	}
-	
-	else if( throw.from == RIGHT_BOT)
-	{
-		if(throw.to == LEFT_BOT)
-			game_summary.right_to_left++;
-		else if(throw.to == MIDDLE_BOT)
-			game_summary.right_to_middle++;
-		else if(throw.to == HUMAN)
-			game_summary.right_to_player++;
-	}
-	
-	if ( throw.to == HUMAN )
-		game_summary.player_received++;
-	else if ( throw.to == LEFT_BOT )
-		game_summary.left_received++;
-	else if ( throw.to == MIDDLE_BOT )
-		game_summary.middle_received++;
-	else if ( throw.to == RIGHT_BOT )
-		game_summary.right_received++;
+	return round_summary[0];
 }
 
-void reset_game_summary(bool switched, bool paused, int first_throw)
+void reset_throw_log()
 {
-	game_summary.switched 		= switched;
-	game_summary.paused 		= paused;
-	
-	game_summary.first_throw_nr	= first_throw;
-	
-	game_summary.player_to_left = 0;
-	game_summary.player_to_middle = 0;
-	game_summary.player_to_right = 0;
-	
-	game_summary.left_to_middle = 0;
-	game_summary.left_to_player = 0;
-	game_summary.left_to_right = 0;
-	
-	game_summary.middle_to_right = 0;
-	game_summary.middle_to_player = 0;
-	game_summary.middle_to_left = 0;
-	
-	game_summary.right_to_middle = 0;
-	game_summary.right_to_player = 0;
-	game_summary.right_to_left = 0;
-	
-	game_summary.player_received = 0;
-	game_summary.left_received = 0;
-	game_summary.middle_received = 0;
-	game_summary.right_received = 0;
+	throw_summaries.size=0;
 }
+
+void add_throw_to_summary( ThrowSummary throw, RoundSummary[] round_summary)
+{
+	if( throw.from == game::HUMAN)
+	{
+		if(throw.to == game::LEFT_BOT)
+			round_summary[0].player_to_left++;
+		else if(throw.to == game::MIDDLE_BOT)
+			round_summary[0].player_to_middle++;
+		else if(throw.to == game::RIGHT_BOT)
+			round_summary[0].player_to_right++;
+	}
+	
+	else if( throw.from == game::LEFT_BOT)
+	{
+		if(throw.to == game::HUMAN)
+			round_summary[0].left_to_player++;
+		else if(throw.to == game::MIDDLE_BOT)
+			round_summary[0].left_to_middle++;
+		else if(throw.to == game::RIGHT_BOT)
+			round_summary[0].left_to_right++;
+	}
+	
+	else if( throw.from == game::MIDDLE_BOT)
+	{
+		if(throw.to == game::LEFT_BOT)
+			round_summary[0].middle_to_left++;
+		else if(throw.to == game::HUMAN)
+			round_summary[0].middle_to_player++;
+		else if(throw.to == game::RIGHT_BOT)
+			round_summary[0].middle_to_right++;
+	}
+	
+	else if( throw.from == game::RIGHT_BOT)
+	{
+		if(throw.to == game::LEFT_BOT)
+			round_summary[0].right_to_left++;
+		else if(throw.to == game::MIDDLE_BOT)
+			round_summary[0].right_to_middle++;
+		else if(throw.to == game::HUMAN)
+			round_summary[0].right_to_player++;
+	}
+	
+	if ( throw.to == game::HUMAN )
+		round_summary[0].player_received++;
+	else if ( throw.to == game::LEFT_BOT )
+		round_summary[0].left_received++;
+	else if ( throw.to == game::MIDDLE_BOT )
+		round_summary[0].middle_received++;
+	else if ( throw.to == game::RIGHT_BOT )
+		round_summary[0].right_received++;
+}
+
+// void reset_game_summary(bool switched, int first_throw)
+// {
+// 	game_summary.switched 		= switched;
+	
+// 	game_summary.first_throw_nr	= first_throw;
+	
+// 	game_summary.player_to_left = 0;
+// 	game_summary.player_to_middle = 0;
+// 	game_summary.player_to_right = 0;
+	
+// 	game_summary.left_to_middle = 0;
+// 	game_summary.left_to_player = 0;
+// 	game_summary.left_to_right = 0;
+	
+// 	game_summary.middle_to_right = 0;
+// 	game_summary.middle_to_player = 0;
+// 	game_summary.middle_to_left = 0;
+	
+// 	game_summary.right_to_middle = 0;
+// 	game_summary.right_to_player = 0;
+// 	game_summary.right_to_left = 0;
+	
+// 	game_summary.player_received = 0;
+// 	game_summary.left_received = 0;
+// 	game_summary.middle_received = 0;
+// 	game_summary.right_received = 0;
+// }

@@ -1,16 +1,4 @@
-/******************************************************************************\
-FILE:           game_settings.zm
-AUTHOR:         Chris van Run (UiL-OTS) <C.P.A.vanRun@uu.nl>
-ADAPTED BY:     -
-
-ABOUT: Describes a page where a glove can be chosen and sets the chosen_glove string
-* based on that.
-
-HISTORY:
-2014-07-31 CvR   Created.
-
-\******************************************************************************/
-
+import game::settings;
 
 Page glove_choice_page
 {
@@ -38,17 +26,21 @@ Page glove_choice_page
         }
 
 
-        LabelGadget message
+         LabelGadget message
         {
             init()
             {
-                font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
-                font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
-                fill_pattern_color = color:lightgray;
-                text_color = color:black;
+                font_family = INFO_PAGE_MESSAGE_FONT_FAMILY;
+                font_size = INFO_PAGE_MESSAGE_FONT_SIZE;
+                fill_pattern_color = INFO_PAGE_MESSAGE_COLOR;
+                text_color = INFO_PAGE_MESSAGE_TEXT_COLOR;
+                hor_alignment = ALIGN_CENTER;
+                ver_alignment = ALIGN_CENTER;
                 is_wrapping = true;
-                size = -1, -1; 
-                margin = 2;
+                size = -1, -1;
+                margin = 20;
+                border = 3;
+                border_style = BORDER_RIDGE;
             }
         }
 
@@ -63,6 +55,8 @@ Page glove_choice_page
             {
                 init()
                 {
+                     is_visible=false;
+                    is_managed=false;
                     text = "Player name: ";
                     font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
                     font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
@@ -81,8 +75,8 @@ Page glove_choice_page
                     text = chosen_name;
                     font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
                     font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
-                    fill_pattern_color = color:black;
-                    text_color = color:white;
+                    fill_pattern_color = game::NAME_BOX_COLOR;
+                    text_color = game::NAME_FONT_COLOR;
                     hor_alignment = ALIGN_CENTER;
                     ver_alignment = ALIGN_CENTER;
                     width = 300;
@@ -114,7 +108,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "1";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -134,7 +128,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "2";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -154,7 +148,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "3";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -174,7 +168,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "4";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -194,7 +188,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "5";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -214,7 +208,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "6";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -236,6 +230,8 @@ Page glove_choice_page
                 hor_spacing = 10;
                 ver_spacing = 10;
                 options = LAYOUT_EQUAL_WIDTH;
+                is_visible=false;
+                is_managed=false;
             }
 
 
@@ -244,7 +240,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "1";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -264,7 +260,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "2";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -284,7 +280,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "3";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -304,7 +300,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "4";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -324,7 +320,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "5";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -344,7 +340,7 @@ Page glove_choice_page
                 init()
                 {
 //                  text = "6";
-					width = int(GLOVE_IMAGE_WIDTH * GLOVE_IMAGE_REL_SIZE); height = int(GLOVE_IMAGE_HEIGHT * GLOVE_IMAGE_REL_SIZE);
+					width = int(game::GLOVE_IMAGE_WIDTH * game::GLOVE_IMAGE_REL_SIZE); height = int(game::GLOVE_IMAGE_HEIGHT * game::GLOVE_IMAGE_REL_SIZE);
                     font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
                     font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
                     fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
@@ -375,13 +371,13 @@ Page glove_choice_page
             if (hit(t) == HIT_VALID)
             {
                 chosen_name = layout.hlayout1.name.text;
-                chosen_glove = possible_gloves[side][val-1];
+                chosen_glove = game::GLOVE_PICTURES[side][val-1];
                 
-				possible_gloves[0][val-1] = possible_gloves[0][possible_gloves[0].size-1];
-				possible_gloves[0].size = possible_gloves[0].size - 1;
+				game::GLOVE_PICTURES[0][val-1] = game::GLOVE_PICTURES[0][game::GLOVE_PICTURES[0].size-1];
+				game::GLOVE_PICTURES[0].size = game::GLOVE_PICTURES[0].size - 1;
 				
-				possible_gloves[1][val-1] = possible_gloves[1][possible_gloves[1].size-1];
-				possible_gloves[1].size = possible_gloves[1].size - 1;
+				game::GLOVE_PICTURES[1][val-1] = game::GLOVE_PICTURES[1][game::GLOVE_PICTURES[1].size-1];
+				game::GLOVE_PICTURES[1].size = game::GLOVE_PICTURES[1].size - 1;
                 ignore_remaining_hits();
 
                 stop();
@@ -414,47 +410,47 @@ Page glove_choice_page
     void set_label_images_left(string s1, string s2, string s3, string s4, 
         string s5, string s6)
 	{
-		layout.hlayout.buttons1.button1.fill_pattern_image = stimuli_dir() + "images/" + s1;
-		layout.hlayout.buttons1.button1.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons1.button1.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons1.button2.fill_pattern_image = stimuli_dir() + "images/" + s2;
-        layout.hlayout.buttons1.button2.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons1.button2.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons1.button3.fill_pattern_image = stimuli_dir() + "images/" + s3;
-        layout.hlayout.buttons1.button3.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons1.button3.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons1.button4.fill_pattern_image = stimuli_dir() + "images/" + s4;
-        layout.hlayout.buttons1.button4.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons1.button4.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons1.button5.fill_pattern_image = stimuli_dir() + "images/" + s5;
-        layout.hlayout.buttons1.button5.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons1.button5.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons1.button6.fill_pattern_image = stimuli_dir() + "images/" + s6;
-        layout.hlayout.buttons1.button6.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons1.button6.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button1.fill_pattern_image = stimuli_dir() + "images/" + s1;
+                layout.hlayout.buttons1.button1.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button1.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button2.fill_pattern_image = stimuli_dir() + "images/" + s2;
+                layout.hlayout.buttons1.button2.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button2.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button3.fill_pattern_image = stimuli_dir() + "images/" + s3;
+                layout.hlayout.buttons1.button3.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button3.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button4.fill_pattern_image = stimuli_dir() + "images/" + s4;
+                layout.hlayout.buttons1.button4.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button4.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button5.fill_pattern_image = stimuli_dir() + "images/" + s5;
+                layout.hlayout.buttons1.button5.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button5.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button6.fill_pattern_image = stimuli_dir() + "images/" + s6;
+                layout.hlayout.buttons1.button6.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                layout.hlayout.buttons1.button6.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
 	}
 	
 	void set_label_images_right(string s1, string s2, string s3, string s4, 
         string s5, string s6)
 	{
-		layout.hlayout.buttons2.button1.fill_pattern_image = stimuli_dir() + "images/" + s1;
-		layout.hlayout.buttons2.button1.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons2.button1.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons2.button2.fill_pattern_image = stimuli_dir() + "images/" + s2;
-        layout.hlayout.buttons2.button2.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons2.button2.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons2.button3.fill_pattern_image = stimuli_dir() + "images/" + s3;
-        layout.hlayout.buttons2.button3.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons2.button3.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons2.button4.fill_pattern_image = stimuli_dir() + "images/" + s4;
-        layout.hlayout.buttons2.button4.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons2.button4.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons2.button5.fill_pattern_image = stimuli_dir() + "images/" + s5;
-        layout.hlayout.buttons2.button5.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons2.button5.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
-        layout.hlayout.buttons2.button6.fill_pattern_image = stimuli_dir() + "images/" + s6;
-        layout.hlayout.buttons2.button6.fill_pattern_scaling_x = GLOVE_IMAGE_REL_SIZE;
-		layout.hlayout.buttons2.button6.fill_pattern_scaling_y = GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button1.fill_pattern_image = stimuli_dir() + "images/" + s1;
+                    layout.hlayout.buttons2.button1.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button1.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button2.fill_pattern_image = stimuli_dir() + "images/" + s2;
+                    layout.hlayout.buttons2.button2.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button2.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button3.fill_pattern_image = stimuli_dir() + "images/" + s3;
+                    layout.hlayout.buttons2.button3.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button3.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button4.fill_pattern_image = stimuli_dir() + "images/" + s4;
+                    layout.hlayout.buttons2.button4.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button4.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button5.fill_pattern_image = stimuli_dir() + "images/" + s5;
+                    layout.hlayout.buttons2.button5.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button5.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button6.fill_pattern_image = stimuli_dir() + "images/" + s6;
+                    layout.hlayout.buttons2.button6.fill_pattern_scaling_x = game::GLOVE_IMAGE_REL_SIZE;
+                    layout.hlayout.buttons2.button6.fill_pattern_scaling_y = game::GLOVE_IMAGE_REL_SIZE;
 	}
 
 
@@ -482,21 +478,21 @@ Page glove_choice_page
 		first_trial_delay = 0s;
 
 		set_label_images_left(
-			possible_gloves[0][0],
-			possible_gloves[0][1],
-			possible_gloves[0][2],
-			possible_gloves[0][3],
-			possible_gloves[0][4],
-			possible_gloves[0][5]
+			game::GLOVE_PICTURES[0][0],
+			game::GLOVE_PICTURES[0][1],
+			game::GLOVE_PICTURES[0][2],
+			game::GLOVE_PICTURES[0][3],
+			game::GLOVE_PICTURES[0][4],
+			game::GLOVE_PICTURES[0][5]
 		);
 		
 		set_label_images_right(
-			possible_gloves[1][0],
-			possible_gloves[1][1],
-			possible_gloves[1][2],
-			possible_gloves[1][3],
-			possible_gloves[1][4],
-			possible_gloves[1][5]
+			game::GLOVE_PICTURES[1][0],
+			game::GLOVE_PICTURES[1][1],
+			game::GLOVE_PICTURES[1][2],
+			game::GLOVE_PICTURES[1][3],
+			game::GLOVE_PICTURES[1][4],
+			game::GLOVE_PICTURES[1][5]
 		);
 		
         if (test_window1.show_page(this, now() + showdelay, fadedur) == 0)

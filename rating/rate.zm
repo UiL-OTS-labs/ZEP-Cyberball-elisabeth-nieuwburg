@@ -1,0 +1,64 @@
+import stimuli;
+import output;
+import check_1of7_page;
+import texts_en;
+
+Block task
+{
+	int block;
+
+    on_event:entry()
+    {
+    	check_1of7_page.hide_cursor();
+
+    	test_items.shuffle(0,-1);
+
+    	num_cycles = test_items.size;
+    }
+
+    on_event:exit()
+    {
+    	test_output_save();
+    }
+
+    Trial trial
+    {
+    	TestItem item;
+    	TestOutput output;
+
+	on_event:entry()
+	{
+		item = test_items[task.cycle];
+		check_1of7_page.set_text(item.question);
+		check_1of7_page.set_label_texts(item.label1,item.label2,item.label3,item.label4,item.label5,item.label6,item.label7);
+		check_1of7_page.set_keys('z','x','c','v','b','n','m');
+		check_1of7_page.action(this);
+		send_rating_trigger(item.id);
+	}
+
+	on_event:exit()
+	{
+		TestOutput clear;
+		output = clear;
+		output.block_nr = task.block;
+		output.order = task.cycle+1;
+		output.id = item.id;
+		output.question = substring(item.question, 0, 10);
+		output.qrt = check_1of7_page.response.rt;
+		output.qanswer = check_1of7_page.response.value;
+		test_output_append(output);
+	}
+    }
+}
+
+void action(Part caller, int block)
+{
+
+test_items.load(stimuli_dir() + "rating_questions.csv", true, 1);
+
+task.block = block;
+
+    // Activate the task. When the task is done, the registered caller
+    // (c.q. the main experiment object) will automatically be signalled.
+    task.enter(caller);
+}

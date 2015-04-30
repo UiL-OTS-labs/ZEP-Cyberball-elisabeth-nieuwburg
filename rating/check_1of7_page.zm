@@ -1,0 +1,539 @@
+/******************************************************************************\
+FILE:           std_check_1of7_page.zm
+AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
+ADAPTED BY:     -
+
+DESCRIPTION:
+
+Provides a page object for presenting seven-point scales. The participant must 
+respond to a question/statement by clicking one of seven radio-buttons or by 
+pressing corresponding keys. Participant must use the continue button or enter 
+key to confirm the given response.
+
+
+HISTORY:
+2010-12-23 TV   Created as part of the standard Zep modules.
+
+\******************************************************************************/
+
+Page check_1of7_page
+{
+    char        key1;           // key for response 1
+    char        key2;           // key for response 2
+    char        key3;           // key for response 3
+    char        key4;           // key for response 4
+    char        key5;           // key for response 5
+    char        key6;           // key for response 6
+    char        key7;           // key for response 7
+    char        altkey1;        // alternate key for response 1
+    char        altkey2;        // alternate key for response 2
+    char        altkey3;        // alternate key for response 3
+    char        altkey4;        // alternate key for response 4
+    char        altkey5;        // alternate key for response 5
+    char        altkey6;        // alternate key for response 6
+    char        altkey7;        // alternate key for response 7
+
+
+    init()
+    {
+        fill_pattern_color = INPUT_PAGE_COLOR;
+    }
+
+
+    on_event:key_press()
+    {        
+        if (input_key == key1 || input_key == altkey1)
+        {
+            response.process_hit(1, event_time);
+            layout.buttons.button1.is_checked = true;
+        }
+        else if (input_key == key2 || input_key == altkey2)
+        {
+            response.process_hit(2, event_time);
+            layout.buttons.button2.is_checked = true;
+        }
+        else if (input_key == key3 || input_key == altkey3)
+        {
+            response.process_hit(3, event_time);
+            layout.buttons.button3.is_checked = true;
+        }
+        else if (input_key == key4 || input_key == altkey4)
+        {
+            response.process_hit(4, event_time);
+            layout.buttons.button5.is_checked = true;
+        }
+        else if (input_key == key5 || input_key == altkey5)
+        {
+            response.process_hit(5, event_time);
+            layout.buttons.button5.is_checked = true;
+        }
+        else if (input_key == key6 || input_key == altkey6)
+        {
+            response.process_hit(6, event_time);
+            layout.buttons.button6.is_checked = true;
+        }
+        else if (input_key == key7 || input_key == altkey7)
+        {
+            response.process_hit(7, event_time);
+            layout.buttons.button7.is_checked = true;
+        }
+        else if(input_key == KEY_Escape)
+            done(CONTINUE);
+        else if(input_key == KEY_Return)
+        {
+              if (response.num_valid_hits > 0)
+                    done(CONTINUE);
+        }
+        else
+            handle_special_key(this, input_key, input_modifiers);
+    }
+
+
+    VerticalLayout layout
+    {
+        init()
+        {
+            spacing = 100;
+            options = LAYOUT_SHRINK_ITEMS;
+        }
+
+
+        LabelGadget message
+        {
+            init()
+            {
+                font_family = INPUT_PAGE_MESSAGE_FONT_FAMILY;
+                font_size = INPUT_PAGE_MESSAGE_FONT_SIZE;
+                fill_pattern_color = INPUT_PAGE_MESSAGE_COLOR;
+                text_color = INPUT_PAGE_MESSAGE_TEXT_COLOR;
+//              hor_alignment = ALIGN_CENTER;
+//              ver_alignment = ALIGN_CENTER;
+                is_wrapping = true;
+                size = 800, 200;
+                margin = 20;
+            }
+        }
+        
+        HorGridLayout buttons
+        {
+            init()
+            {
+                wrap_count = 7;
+                hor_spacing = 10;
+                ver_spacing = 10;
+                options = LAYOUT_EQUAL_WIDTH;
+            }
+
+
+            LabelGadget label1
+            {
+                init()
+                {
+                    text = "1";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            LabelGadget label2
+            {
+                init()
+                {
+                    text = "2";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            LabelGadget label3
+            {
+                init()
+                {
+                    text = "3";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            LabelGadget label4
+            {
+                init()
+                {
+                    text = "4";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            LabelGadget label5
+            {
+                init()
+                {
+                    text = "5";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            LabelGadget label6
+            {
+                init()
+                {
+                    text = "6";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            LabelGadget label7
+            {
+                init()
+                {
+                    text = "7";
+                    font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                    font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                    text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+                }
+            }
+
+
+            CheckButtonGadget button1
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(1, event_time);
+                }
+            }
+
+
+            CheckButtonGadget button2
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                    join_group(button1);
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(2, event_time);
+                }
+            }
+
+
+            CheckButtonGadget button3
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                    join_group(button2);
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(3, event_time);
+                }
+            }
+
+
+            CheckButtonGadget button4
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                    join_group(button3);
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(4, event_time);
+                }
+            }
+
+
+            CheckButtonGadget button5
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                    join_group(button4);
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(5, event_time);
+                }
+            }
+
+
+            CheckButtonGadget button6
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                    join_group(button5);
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(6, event_time);
+                }
+            }
+
+
+            CheckButtonGadget button7
+            {
+                init()
+                {
+                    check_box_color = INPUT_PAGE_CHECK_BOX_COLOR;
+                    symbol_alignment = ALIGN_CENTER;
+                    symbol_size = 20;
+                    join_group(button6);
+                }
+
+
+                on_event:change()
+                {
+                    if (is_checked)
+                        response.process_hit(7, event_time);
+                }
+            }
+        }
+
+
+        ButtonGadget ok
+        {
+            init()
+            {
+                text = CONTINUE_BUTTON_TEXT;
+                font_family = INPUT_PAGE_BUTTON_FONT_FAMILY;
+                font_size = INPUT_PAGE_BUTTON_FONT_SIZE;
+                fill_pattern_color = INPUT_PAGE_BUTTON_COLOR;
+                text_color = INPUT_PAGE_BUTTON_TEXT_COLOR;
+            }
+
+
+            on_event:activate()
+            {
+                if (response.num_valid_hits > 0)
+                    done(CONTINUE);
+            }
+        }
+    }
+
+
+    Response response
+    {
+        int     goodvalue;      // correct answer to question (0 if n.a.)
+        int     value;          // response value: 1..7 (0 on timeout)
+        int     rt;             // response time [ms]
+        bool    correct;        // true if correct answer given (if applicable)
+
+
+        void clear()
+        {
+            goodvalue = 0;
+            value = 0;
+            rt = -9999;
+            correct = false;
+        }
+
+
+        void process_hit(int val, time t)
+        {
+            if (hit(t) == HIT_VALID)
+            {
+                value = val;
+                rt = int(reaction_time(num_valid_hits - 1));
+                correct = val == goodvalue;
+            }
+        }
+
+
+        on_event:finish()
+        {
+            done(CONTINUE);
+        }
+    }
+
+
+    void done(int msgid)
+    {
+        // Abort response device in case it is still active.
+        response.abort();
+
+        signal_target(msgid);   // Tell caller we're done.
+        target = null;
+    }
+
+
+    //==========================================================================
+
+
+    void set_text(string txt, bool markup=false)
+    {
+        layout.message.text = txt, markup;
+    }
+
+
+    void set_label_texts(string s1, string s2, string s3, string s4, 
+        string s5, string s6, string s7)
+    {
+        layout.buttons.label1.text = s1;
+        layout.buttons.label2.text = s2;
+        layout.buttons.label3.text = s3;
+        layout.buttons.label4.text = s4;
+        layout.buttons.label5.text = s5;
+        layout.buttons.label6.text = s6;
+        layout.buttons.label7.text = s7;
+    }
+
+
+    void set_button_texts(string s1, string s2, string s3, string s4, 
+        string s5, string s6, string s7)
+    {
+        layout.buttons.button1.text = s1;
+        layout.buttons.button2.text = s2;
+        layout.buttons.button3.text = s3;
+        layout.buttons.button4.text = s4;
+        layout.buttons.button5.text = s5;
+        layout.buttons.button6.text = s6;
+        layout.buttons.button7.text = s7;
+    }
+
+
+    void show_labels()
+    {
+        layout.buttons.label1.is_managed = true;
+        layout.buttons.label2.is_managed = true;
+        layout.buttons.label3.is_managed = true;
+        layout.buttons.label4.is_managed = true;
+        layout.buttons.label5.is_managed = true;
+        layout.buttons.label6.is_managed = true;
+        layout.buttons.label7.is_managed = true;
+    }
+
+
+    void hide_labels()
+    {
+        layout.buttons.label1.is_managed = false;
+        layout.buttons.label2.is_managed = false;
+        layout.buttons.label3.is_managed = false;
+        layout.buttons.label4.is_managed = false;
+        layout.buttons.label5.is_managed = false;
+        layout.buttons.label6.is_managed = false;
+        layout.buttons.label7.is_managed = false;
+    }
+
+
+    void set_keys(char k1, char k2, char k3, char k4, char k5, 
+        char k6, char k7)
+    {
+        key1 = k1;
+        key2 = k2;
+        key3 = k3;
+        key4 = k4;
+        key5 = k5;
+        key6 = k6;
+        key7 = k7;
+    }
+
+
+    void set_alternate_keys(char k1, char k2, char k3, char k4, char k5, 
+        char k6, char k7)
+    {
+        altkey1 = k1;
+        altkey2 = k2;
+        altkey3 = k3;
+        altkey4 = k4;
+        altkey5 = k5;
+        altkey6 = k6;
+        altkey7 = k7;
+    }
+
+
+    void action(Object caller, int correct=0, dur timeout=0s, 
+        dur showdelay=-1s, dur fadedur=-1s)
+    {
+        response.clear();
+        response.goodvalue = correct;
+
+        layout.buttons.button1.uncheck_buttons_in_group();
+
+        // Force page show delay and transition duration in sane range.
+        if (showdelay < 0s) showdelay = page_transition_delay;
+        else showdelay = limit(showdelay, 0s, MAX_PAGE_TRANSITION_DELAY);
+        if (fadedur < 0s) fadedur = PAGE_TRANSITION_DURATION;
+        else fadedur = limit(fadedur, 0s, MAX_PAGE_TRANSITION_DURATION);
+
+    	// Clear page transition delay.
+    	page_transition_delay = 0s;
+
+    	// Clear first trial delay.
+	first_trial_delay = 0s;
+
+        if (test_window1.show_page(this, now() + showdelay, fadedur) == 0)
+        {
+            // Page not yet shown. Let response period begin when the page 
+            // is fully visible (fade-in has finished).
+            response.start(expected_transition_finish_time, timeout);
+        }
+        else
+        {
+            // Page already shown. Let response period begin immediately.
+            response.start(now(), timeout);
+        }
+
+        target = caller;
+
+        test_window1.activate();
+    }
+
+
+    void stop_action()
+    {
+        response.abort();
+        target = null;
+    }
+}

@@ -1,24 +1,3 @@
-/******************************************************************************\
-FILE:           fonts.zm
-AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     -
-
-DESCRIPTION:
-
-Defines default fonts (family & size) for various graphic elements.
-
-To see which fonts are available to Zep on your system run the zeplistfonts
-utility. The generic fonts Monospace, Serif and Sans are always available. 
-However the appearance of these fallback fonts are not the same on all 
-platforms.
-
-
-HISTORY:
-2009-12-02 TV   Created as part of the standard Zep modules.
-
-\******************************************************************************/
-
-
 // Some generic font sizes. The relative sizes correspond to those in CSS 2.1.
 const real FONT_SIZE_MEDIUM     = 24;
 const real FONT_SIZE_LARGE      = FONT_SIZE_MEDIUM * 1.2;

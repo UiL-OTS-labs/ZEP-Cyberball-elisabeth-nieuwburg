@@ -1,0 +1,70 @@
+
+// Button texts.
+const string    CONTINUE_BUTTON_TEXT            = "[Enter] to Continue";
+const string    NEXT_BUTTON_TEXT                = "Next";
+const string    REPEAT_BUTTON_TEXT              = "Repeat";
+const string    YES_BUTTON_TEXT                 = "Yes";
+const string    NO_BUTTON_TEXT                  = "No";
+const string    TRUE_BUTTON_TEXT                = "True";
+const string    FALSE_BUTTON_TEXT               = "False";
+const string    CORRECT_BUTTON_TEXT             = "Correct";
+const string    INCORRECT_BUTTON_TEXT           = "Incorrect";
+const string    FIRST_BUTTON_TEXT               = "First";
+const string    SECOND_BUTTON_TEXT              = "Second";
+
+
+// Other texts.
+const string    WELCOME_TEXT                    = "Welcome";
+
+const string 	INTRO_SCREEN_TEXT = "[Enter] to Continue";
+
+const string INTRODUCTION_TEXT = 
+"Welcome!";
+
+const string	INSTRUCTION_RATING1_TEXT = 
+"instruction_rating1_text";
+
+const string GLOVE_SELECTION_TEXT = 
+"Please input your name and select a glove";
+
+const string	INSTRUCTION_PRACTICE_TEXT = 
+"INSTRUCTION_PRACTICE_TEXT";
+
+const string	INSTRUCTION_ROUND1_TEXT = 
+"INSTRUCTION_ROUND1_TEXT";
+
+const string	INSTRUCTION_RATING2_TEXT = 
+"instruction_rating2_text";
+
+const string	INSTRUCTION_ROUND2_TEXT = 
+"INSTRUCTION_ROUND2_TEXT";
+
+const string	INSTRUCTION_RATING3_TEXT = 
+"instruction_rating3_text";
+
+const string	CONDITIONAL_INSTRUCTION_TEXT = 
+"CONDITIONAL_INSTRUCTION_TEXT";
+
+const string	INSTRUCTION_ROUND3_TEXT = 
+"INSTRUCTION_ROUND3_TEXT";
+
+const string	INSTRUCTION_RATING4_TEXT = 
+"instruction_rating4_text";
+
+const string	INSTRUCTION_ROUND4_TEXT = 
+"INSTRUCTION_ROUND4_TEXT";
+
+
+const string	INSTRUCTION_RATING5_TEXT = 
+"INSTRUCTION_RATING5_TEXT";
+
+
+const string    THANK_YOU_TEXT                  = "End of Experiment\n\nThank you very much!";
+
+const string INSTRUCTION_TEXT = 
+"This is some instruction text, right here! You can change this in modules/texts.zm\n\n Use the arrow keys to select to the player to pitch the ball to!";
+
+const string INSTRUCTION2_TEXT = 
+"This is instruction text for AFTER the practice. \n" 
+"We are waiting until the other players are also ready ... ";
+

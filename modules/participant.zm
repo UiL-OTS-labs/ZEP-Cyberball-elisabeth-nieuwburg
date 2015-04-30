@@ -1,24 +1,8 @@
-/******************************************************************************\
-FILE:           participant.zm
-AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     Chris van Run
-
-DESCRIPTION:
-
-Provides participant database record field create and check functions.
-
-
-HISTORY:
-2011-08-27 TV   Created as part of the standard Zep modules.
-
-\******************************************************************************/
-
-
 // Creates required participant record fields. // to get these fields use: expdb.participant.get_enum_field("sex");
 void create_participant_fields()
 {
 	expdb.participant.add_enum_field("gender", "female|male|other");
-    expdb.participant.add_int_field("control_variable");
+    	expdb.participant.add_int_field("control_variable");
 }
 
 

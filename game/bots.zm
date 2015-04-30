@@ -1,0 +1,124 @@
+import shuffle;
+
+Timer bot_action
+	{		
+		bool setup;
+		
+		Player[..][..] bot_throw_stack; //holds the pseudorandom throws
+
+		Player[..][..] bot_targets =
+			{
+				{}, //HUMAN
+				{HUMAN, RIGHT_BOT, MIDDLE_BOT}, //LEFT
+				{HUMAN, RIGHT_BOT, LEFT_BOT}, //MIDDLE
+				{HUMAN, LEFT_BOT, MIDDLE_BOT}, //RIGHT
+			};
+		
+		Player current_bot;
+		Player new_target; 
+		
+		on_event:expire()
+		{
+			game_page.throw(current_bot, new_target, expire_time);
+		}
+		
+		time think(Player b, time tref)
+		{
+			if(bot_throw_stack.size == 0)
+				println("ERROR: 'bot think' was called with an empty throw_stack!");
+			current_bot = b;
+			
+			if(bot_throw_stack[current_bot].size == 0) //if you are out of throwes
+				new_target = bot_targets[current_bot][random(0,bot_targets[current_bot].size)]; //select a target random
+			else
+			{
+				new_target = bot_throw_stack[current_bot][bot_throw_stack[current_bot].size-1]; //else retrieve and remove the next throw
+				bot_throw_stack[current_bot].size = bot_throw_stack[current_bot].size-1;
+			}
+			
+			tref = tref + MINIMUM_BOT_WAITING_TIME + (MAXIMUM_BOT_WAITING_TIME - MINIMUM_BOT_WAITING_TIME) * real(random(0,100))/100;
+			start(tref);
+			return tref;
+		}
+		
+		void setup_bot_throws(bool practice = false)
+		{
+			bot_throw_stack.size = 0; //reset
+			bot_throw_stack.size = 4;
+			int bot = 1;
+			while(bot < 4)
+			{
+				bot_throw_stack[bot].size = 0;
+				bot_throw_stack[bot].size = BOT_NUMBER_OF_THROWS;
+					
+				bot_targets[bot].shuffle(0,-1);
+				
+				int stack_index = 0;
+				int target_index = 0;
+				while(stack_index < bot_throw_stack[bot].size)
+				{
+					if(!practice)
+						bot_throw_stack[bot][stack_index] = bot_targets[bot][target_index];
+					else
+						bot_throw_stack[bot][stack_index] = HUMAN;
+					stack_index++;
+					
+					if(target_index == bot_targets[bot].size-1)
+						target_index = 0;
+					else
+						target_index++;
+				}
+				if(!practice)
+					shuffle_list(bot_throw_stack[bot], bot); //shuffle the generated throw list
+				bot++;
+			}
+			setup = true;
+		}
+		
+		bool still_throws_registered()
+		{
+			int bot;
+			while(bot<bot_throw_stack.size)
+			{
+				if(bot_throw_stack[bot].size >= 1)
+					return true;
+				bot++;
+			}
+			return false;
+		}
+		
+		void remove_player_from_bot_targets(Player p)
+		{
+			int bot;
+			while(bot<bot_targets.size)
+			{
+				int index;
+				while(index < bot_targets[bot].size)
+				{
+					if(bot_targets[bot][index] == p)
+						{
+							bot_targets[bot][index] = bot_targets[bot][bot_targets[bot].size-1];
+							bot_targets[bot].size = bot_targets[bot].size-1;
+						}
+					index++;
+				}
+				bot++;
+			}
+		}
+
+		void add_player_to_bot_targets(Player p)
+		{
+			int bot;
+			while(bot<bot_targets.size)
+			{
+				bot_targets[bot].size = bot_targets[bot].size+1;
+				bot_targets[bot][bot_targets[bot].size-1] = p;
+				bot++;
+			}
+		}
+		
+		void clear_bot_throws(Player p)
+		{
+			bot_throw_stack[p].size = 0;
+		}
+	}

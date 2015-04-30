@@ -1,0 +1,134 @@
+record PlayerRecord
+{
+	string playerName;
+	
+	Player id;
+
+	Gender gender;
+
+	string face_image;
+	string glove_image;
+
+	int x; int y; //resembles the location from which the primary player attributes (face and glove) are drawn from. After playerSetup it resembles where to receive the ball
+}
+
+enum Player
+{
+	HUMAN 	= 0,
+	LEFT_BOT 	= 1,
+	MIDDLE_BOT 	= 2,
+	RIGHT_BOT 	= 3,
+}
+
+enum Gender
+{
+	FEMALE,
+	MALE,
+}
+
+void setPlayerCoor(Player player, int x, int y)
+{
+	game_page.players_list[player].x = x;
+	game_page.players_list[player].y = y;
+}
+
+// Performs preparatory work on the players before the game starts
+void setupPlayers()
+{
+	game_page.players_list.size = 4;
+	
+	
+	//the next part handles the choice of gloves but prevents them being equal (during glove selection the selected glove was removed from the pool).
+	int left_bot_glove = random(0, GLOVE_PICTURES[1].size);
+	int middle_bot_glove = random(0, GLOVE_PICTURES[1].size);
+	int right_bot_glove = random(0, GLOVE_PICTURES[1].size);
+	
+	while(GLOVE_PICTURES[1].size >= 3 && right_bot_glove==left_bot_glove || right_bot_glove==middle_bot_glove || middle_bot_glove == left_bot_glove)
+	{
+		right_bot_glove = random(0, GLOVE_PICTURES[1].size);
+		middle_bot_glove = random(0, GLOVE_PICTURES[1].size);
+	}
+	
+	//the next part makes sure that the middle face was chosen and that the two other faces are set.
+	int left_bot_face; 
+	int middle_bot_face = expdb.participant.get_int_field("control_variable") ;
+	 int right_bot_face; 
+	
+	if(middle_bot_face == 1)
+	{
+		left_bot_face = 2;
+		right_bot_face = 3;
+	}
+	else if(middle_bot_face == 2)
+	{
+		left_bot_face = 1;
+		right_bot_face = 3;
+	}
+	else if(middle_bot_face == 3)
+	{
+		left_bot_face = 1;
+		right_bot_face = 2;
+	}
+	
+	if(random(0,2)==1) //half of the time switch them around
+	{
+		int temp = left_bot_face;
+		left_bot_face = right_bot_face;
+		right_bot_face = temp;
+	}
+	
+
+	// combine everything in defining the new players =)
+	PlayerRecord human;
+	human.playerName = glove_choice_page.chosen_name;
+	human.id = HUMAN;
+	human.face_image = "";
+
+	if(expdb.participant.get_enum_field("gender") == "male")
+		human.gender = MALE;
+	else if(expdb.participant.get_enum_field("gender") == "female")
+		human.gender = FEMALE;
+	else if(expdb.participant.get_enum_field("gender") == "other")
+		human.gender = random(0,2)? MALE : FEMALE;
+
+	human.glove_image = glove_choice_page.chosen_glove;
+	human.x = int( test_window1.width * PLAYER_RELATIVE_X);		
+	human.y = int( test_window1.height * PLAYER_RELATIVE_Y);
+
+	game_page.players_list[HUMAN] = human;
+	
+	PLAYER_NAMES[human.gender].shuffle(1, -1);
+
+	PlayerRecord left;
+	left.playerName = PLAYER_NAMES[human.gender][LEFT_BOT];
+	left.id = LEFT_BOT;
+	left.gender = human.gender;
+	left.face_image = player_faces[human.gender][left_bot_face];
+	left.glove_image = GLOVE_PICTURES[0][left_bot_glove];
+	left.x = int( test_window1.width * LEFT_BOT_RELATIVE_X);		
+	left.y = int( test_window1.height * LEFT_BOT_RELATIVE_Y);
+	game_page.players_list[LEFT_BOT] = left;
+	
+	PlayerRecord middle;
+	middle.playerName = PLAYER_NAMES[human.gender][MIDDLE_BOT];
+	middle.id = MIDDLE_BOT;
+	middle.gender = human.gender;
+	middle.face_image = player_faces[human.gender][middle_bot_face];
+	int side = random(0,1);
+	middle.glove_image = GLOVE_PICTURES[side][middle_bot_glove];
+	middle.x = int( test_window1.width * MIDDLE_BOT_RELATIVE_X);		
+	middle.y = int( test_window1.height * MIDDLE_BOT_RELATIVE_Y);
+	game_page.players_list[MIDDLE_BOT] = middle;
+	
+	PlayerRecord right;
+	right.playerName = PLAYER_NAMES[human.gender][RIGHT_BOT];
+	right.id = RIGHT_BOT;
+	right.gender = human.gender;
+	right.face_image = player_faces[human.gender][right_bot_face];
+	right.glove_image = GLOVE_PICTURES[1][right_bot_glove];
+	right.x = int( test_window1.width * RIGHT_BOT_RELATIVE_X);		
+	right.y = int( test_window1.height * RIGHT_BOT_RELATIVE_Y);
+	game_page.players_list[RIGHT_BOT] = right;
+
+	game_page.game_status.players_have_been_initiated = true;
+}	

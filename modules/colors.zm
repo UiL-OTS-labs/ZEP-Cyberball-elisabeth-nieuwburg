@@ -1,22 +1,3 @@
-/******************************************************************************\
-FILE:           colors.zm
-AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     -
-
-DESCRIPTION:
-
-Defines default colors for various graphic elements. 
-
-For a list of predefined Zep color names see:
-  http://www.beexy.nl/zep -> Reference Manuals -> Color Names
-
-
-HISTORY:
-2009-12-02 TV   Created as part of the standard Zep modules.
-
-\******************************************************************************/
-
-
 // Colors used on test pages.
 const color     TEST_PAGE_COLOR                 = color:gray10;
 const color     TEST_PAGE_STIMULUS_COLOR        = color:white;

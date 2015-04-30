@@ -1,0 +1,18 @@
+// Item table record.
+record TestItem
+{
+    int         id;             // item id
+    string    question;           // stimulus word
+
+    string label1;
+    string label2;
+    string label3;
+    string label4;
+    string label5;
+    string label6;
+    string label7;
+}
+ 
+// Test item table.
+//   index: item number
+TestItem[..] test_items;

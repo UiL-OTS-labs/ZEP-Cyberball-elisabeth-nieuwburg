@@ -1,21 +1,3 @@
-/******************************************************************************\
-FILE:           pause_page.zm
-AUTHOR:         Theo Veenker <theo.veenker@beexy.nl>
-ADAPTED BY:     Chris van Run
-
-DESCRIPTION:
-
-Provides a page object for displaying messages. It consists of a message area 
-and an OK button.
-
-
-HISTORY:
-2009-12-02 TV   Created as part of the standard Zep modules.
-2014-06-16 CvR	Added a non-response period to have a minimum duration of pause.
-
-\******************************************************************************/
-
-
 Page pause_page
 {
     bool        checkkeys;      // if set, continue keys enabled
@@ -76,7 +58,7 @@ Page pause_page
         {
             init()
             {
-                text = "Let's play ball!";
+                text =CONTINUE_BUTTON_TEXT;
                 font_family = INFO_PAGE_BUTTON_FONT_FAMILY;
                 font_size = INFO_PAGE_BUTTON_FONT_SIZE;
                 fill_pattern_color = INFO_PAGE_BUTTON_COLOR;
