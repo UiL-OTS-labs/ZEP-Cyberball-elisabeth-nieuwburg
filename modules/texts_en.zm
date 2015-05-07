@@ -19,7 +19,7 @@ const string    WELCOME_TEXT                    = "Welcome";
 const string 	INTRO_SCREEN_TEXT = "[Enter] to Continue";
 
 const string INTRODUCTION_TEXT = 
-"Welcome!";
+"Welcome! This is the introduction text.This is the introduction text.\nThis is the introduction text.This is the introduction text.This is the introduction text.This is the introduction text.This is the introduction text.";
 
 const string	INSTRUCTION_RATING1_TEXT = 
 "instruction_rating1_text";

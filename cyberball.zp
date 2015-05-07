@@ -35,7 +35,7 @@ import rating::rate;
 
 import participant;
 import glove_choice_page;
-import pause_page;
+import std_pause_page;
 import texts_en;
 import output;
 import grouping;
@@ -66,7 +66,7 @@ Experiment experiment
 	{
 		on_event:entry()
 		{
-			entry_page.set_text(INTRODUCTION_TEXT);
+			entry_page.set_text(WELCOME_TEXT);
 			entry_page.action(this, 0s);
 		}
 	}
