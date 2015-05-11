@@ -9,7 +9,7 @@ Block task
 
     on_event:entry()
     {
-    	check_1of7_page.hide_cursor();
+    	//check_1of7_page.hide_cursor();
 
     	test_items.shuffle(0,-1);
 
