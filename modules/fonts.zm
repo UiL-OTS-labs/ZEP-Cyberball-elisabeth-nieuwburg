@@ -34,7 +34,7 @@ const real      TEST_PAGE_STATUS_FONT_SIZE      = FONT_SIZE_LARGE;
 
 // Fonts used on standard modules entry_page and exit_page.
 const string    ENTRY_PAGE_MESSAGE_FONT_FAMILY  = FONT_FAMILY_SERIF;
-const real      ENTRY_PAGE_MESSAGE_FONT_SIZE    = FONT_SIZE_XXXLARGE;
+const real      ENTRY_PAGE_MESSAGE_FONT_SIZE    = FONT_SIZE_XLARGE;
 
 
 // Fonts used on standard module pause_page.

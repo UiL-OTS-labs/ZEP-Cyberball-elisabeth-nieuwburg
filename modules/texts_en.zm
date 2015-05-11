@@ -1,6 +1,6 @@
 
 // Button texts.
-const string    CONTINUE_BUTTON_TEXT            = "[Enter] to Continue";
+const string    CONTINUE_BUTTON_TEXT            = "Druk op [Enter] om door te gaan.";
 const string    NEXT_BUTTON_TEXT                = "Next";
 const string    REPEAT_BUTTON_TEXT              = "Repeat";
 const string    YES_BUTTON_TEXT                 = "Yes";
@@ -14,52 +14,67 @@ const string    SECOND_BUTTON_TEXT              = "Second";
 
 
 // Other texts.
-const string    WELCOME_TEXT                    = "Welcome";
+const string    WELCOME_TEXT                    = "Welkom!";
 
-const string 	INTRO_SCREEN_TEXT = "[Enter] to Continue";
+const string 	INTRO_SCREEN_TEXT = "Druk op [Enter] om door te gaan.";
 
 const string INTRODUCTION_TEXT = 
-"Welcome! This is the introduction text.This is the introduction text.\nThis is the introduction text.This is the introduction text.This is the introduction text.This is the introduction text.This is the introduction text.";
+"Introductie\n\nWelkom!\n\nJe zult in dit experiment meerdere malen een balspel spelen, waarin je overgooit met drie andere spelers die te zien zijn op het scherm. "
+"Ook krijg je tussendoor steeds een aantal vragen die je moet beantwoorden.\n\nIn de instructies op het scherm zal duidelijk worden aangegeven wat je moet doen. "
+"Mocht je toch een vraag hebben, dan kun je die aan de proefleider stellen. Aan het einde van het experiment vragen we je nog een korte vragenlijst in te vullen. "
+"\n\nAlvast bedankt voor je deelname!";
 
 const string	INSTRUCTION_RATING1_TEXT = 
-"instruction_rating1_text";
+"Instructie\n\nJe krijgt nu enkele vragen te zien. De vragen gaan over hoe jij je op dit moment voelt. "
+"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden.\n\nAntwoord geven doe je door ?????.";
 
 const string GLOVE_SELECTION_TEXT = 
-"Please input your name and select a glove";
+"Vul hieronder je naam in en kies vervolgens een handschoen.";
 
 const string	INSTRUCTION_PRACTICE_TEXT = 
-"INSTRUCTION_PRACTICE_TEXT";
+"Instructie oefensessie\n\nJe gaat nu het balspel spelen. We beginnen met een korte oefensessie om het spel te leren kennen. "
+"\n\nJe kunt kiezen naar welke speler je de bal wilt overspelen door de pijltjestoetsen op het toetsenbord (naar links, naar boven en naar rechts) te gebruiken. "
+"Wanneer je één van de pijltjestoetsen indrukt, speel je de bal over naar een andere speler.";
 
 const string	INSTRUCTION_ROUND1_TEXT = 
-"INSTRUCTION_ROUND1_TEXT";
+"Instructie balspel\n\nJe gaat nu het echte spel spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING2_TEXT = 
-"instruction_rating2_text";
+"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
 
 const string	INSTRUCTION_ROUND2_TEXT = 
-"INSTRUCTION_ROUND2_TEXT";
+"Instructie balspel\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING3_TEXT = 
-"instruction_rating3_text";
+"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
 
 const string	CONDITIONAL_INSTRUCTION_TEXT = 
-"CONDITIONAL_INSTRUCTION_TEXT";
+"Instructie\n\nJe hebt gemerkt dat de andere spelers de bal niet altijd even vaak naar jou overspelen. Dit kan vervelend zijn. "
+"\n\nJe gaat zo meteen weer het balspel spelen, maar bij deze sessie krijg je een extra taak. "
+"Als de andere spelers de bal weer niet naar jou gooien, zeg je in je hoofd het volgende tegen jezelf: "
+"\n\nAch, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien. "
+"\n\nWe noemen dit een mantra. Probeer elke keer dat je de mantra tegen jezelf zegt, de betekenis goed tot je te laten doordringen.";
 
 const string	INSTRUCTION_ROUND3_TEXT = 
-"INSTRUCTION_ROUND3_TEXT";
+"Instructie balspel\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING4_TEXT = 
-"instruction_rating4_text";
+"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
 
 const string	INSTRUCTION_ROUND4_TEXT = 
-"INSTRUCTION_ROUND4_TEXT";
-
+"Instructie balspel\n\nJe gaat nu het balspel weer spelen. Dit keer speel je met andere spelers dan tijdens de eerdere spelletjes. "
+"Gebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING5_TEXT = 
-"INSTRUCTION_RATING5_TEXT";
+"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
 
-
-const string    THANK_YOU_TEXT                  = "End of Experiment\n\nThank you very much!";
+const string    THANK_YOU_TEXT                  = 
+"Einde\n\nDit is het einde van het experiment. Laat de proefleider weten dat je klaar bent. Je krijgt dan instructies voor de laatste vragenlijst. "
+"\n\nBedankt voor je deelname!";
 
 const string INSTRUCTION_TEXT = 
 "This is some instruction text, right here! You can change this in modules/texts.zm\n\n Use the arrow keys to select to the player to pitch the ball to!";
@@ -67,4 +82,3 @@ const string INSTRUCTION_TEXT =
 const string INSTRUCTION2_TEXT = 
 "This is instruction text for AFTER the practice. \n" 
 "We are waiting until the other players are also ready ... ";
-

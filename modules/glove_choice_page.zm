@@ -3,7 +3,7 @@ import game::settings;
 Page glove_choice_page
 {
 	string chosen_glove = "glove_left_1.png";
-	string chosen_name = "Player 1";
+	string chosen_name = "Speler 1";
 
     init()
     {			
