@@ -29,11 +29,12 @@ Block task
 	on_event:entry()
 	{
 		item = test_items[task.cycle];
-		check_1of7_page.set_text(item.question);
+		check_1of7_page.set_text(item.question, true);
+
 		check_1of7_page.set_label_texts(item.label1,item.label2,item.label3,item.label4,item.label5,item.label6,item.label7);
 		check_1of7_page.set_keys('z','x','c','v','b','n','m');
 		check_1of7_page.action(this);
-		send_rating_trigger(item.id);
+		send_rating_trigger(item.id-1);
 	}
 
 	on_event:exit()

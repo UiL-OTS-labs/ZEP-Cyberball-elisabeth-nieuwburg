@@ -370,7 +370,7 @@ Experiment experiment
 	
 	Block conditional_block
 	{
-		Part conditional_instruction
+		Part conditional_instruction1
 		{
 			on_event:entry()
 			{
@@ -379,7 +379,22 @@ Experiment experiment
 				else
 				{
 					pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
-					pause_page.set_text(CONDITIONAL_INSTRUCTION_TEXT, true);
+					pause_page.set_text(CONDITIONAL_INSTRUCTION_TEXT1[selected_group], true);
+					pause_page.action(this);
+				}
+			}
+		}
+
+		Part conditional_instruction2
+		{
+			on_event:entry()
+			{
+				if(selected_group == C)
+					signal(this,CONTINUE);
+				else
+				{
+					pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
+					pause_page.set_text(CONDITIONAL_INSTRUCTION_TEXT2[selected_group], true);
 					pause_page.action(this);
 				}
 			}
@@ -605,7 +620,7 @@ Experiment experiment
 		on_event:entry()
 		{
 			exit_page.set_text(THANK_YOU_TEXT);
-			exit_page.action(this, 5s, 500ms, 500ms);
+			exit_page.action(this, 0s, 500ms, 500ms);
 		}
 	}
 }

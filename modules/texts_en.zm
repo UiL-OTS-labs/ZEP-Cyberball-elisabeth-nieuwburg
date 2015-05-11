@@ -82,3 +82,22 @@ const string INSTRUCTION_TEXT =
 const string INSTRUCTION2_TEXT = 
 "This is instruction text for AFTER the practice. \n" 
 "We are waiting until the other players are also ready ... ";
+
+
+string[..] CONDITIONAL_INSTRUCTION_TEXT1 =
+{
+	"Instructie text for C, nooit gebruikt...",
+	"Instructie text for AC",
+	"Instructie text for POSR",
+	"Instructie text for NEGR",
+
+};
+
+string[..] CONDITIONAL_INSTRUCTION_TEXT2 =
+{
+	"Instructie text 2 for C, nooit gebruikt...",
+	"Instructie text 2 for AC",
+	"Instructie text 2 for POSR",
+	"Instructie text 2 for NEGR",
+
+};

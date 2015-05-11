@@ -1,6 +1,6 @@
 ###;;woooot;###
-throw;group;text;
-1;C;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
-1;AC;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
-1;POSR;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
-1;NEGR;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
+throw;group;text
+1;C;"Wacht tot je de bal krijgt en gooi hem dan opnieuw."
+1;AC;"Wacht tot je de bal krijgt en gooi hem dan opnieuw."
+1;POSR;"Wacht tot je de bal krijgt en gooi hem dan opnieuw."
+1;NEGR;"Wacht tot je de bal krijgt en gooi hem dan opnieuw."

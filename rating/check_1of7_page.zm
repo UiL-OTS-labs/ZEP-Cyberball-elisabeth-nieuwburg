@@ -60,7 +60,7 @@ Page check_1of7_page
         else if (input_key == key4 || input_key == altkey4)
         {
             response.process_hit(4, event_time);
-            layout.buttons.button5.is_checked = true;
+            layout.buttons.button4.is_checked = true;
         }
         else if (input_key == key5 || input_key == altkey5)
         {
@@ -119,9 +119,9 @@ Page check_1of7_page
             init()
             {
                 wrap_count = 7;
-                hor_spacing = 10;
+                hor_spacing = 100;
                 ver_spacing = 10;
-                options = LAYOUT_EQUAL_WIDTH;
+                options = LAYOUT_STRETCH_ITEMS_HOR;
             }
 
 
@@ -427,8 +427,28 @@ Page check_1of7_page
         layout.buttons.label5.text = s5;
         layout.buttons.label6.text = s6;
         layout.buttons.label7.text = s7;
+
+        correct_for_largest( layout.buttons.label1);
+        correct_for_largest( layout.buttons.label2);
+        correct_for_largest( layout.buttons.label3);
+        correct_for_largest( layout.buttons.label4);
+        correct_for_largest( layout.buttons.label5);
+        correct_for_largest( layout.buttons.label6);
+        correct_for_largest( layout.buttons.label7);
     }
 
+    void correct_for_largest(LabelGadget label)
+    {
+        int index = 0;
+        while(index < length(label.text))
+        {
+            if(substring(label.text,index,1) == " ")
+            {
+                label.text = substring(label.text,0,index) + "\n" + substring(label.text,index+1,length(label.text)-1);
+            }
+            index++;
+        }
+    }
 
     void set_button_texts(string s1, string s2, string s3, string s4, 
         string s5, string s6, string s7)
