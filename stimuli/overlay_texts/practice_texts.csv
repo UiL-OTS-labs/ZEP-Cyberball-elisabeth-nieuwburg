@@ -1,6 +1,6 @@
-###  woooot ###
-throw;group;text
-1;C; "Wait for the return and then re-throw it."
-1;AC; "Wait for the return and then re-throw it."
-1;POSR; "Wait for the return and then re-throw it."
-1;NEGR; "Wait for the return and then re-throw it."
+###;;woooot;###
+throw;group;text;
+1;C;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
+1;AC;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
+1;POSR;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.
+1;NEGR;;Wacht tot je de bal krijgt en gooi hem dan opnieuw.

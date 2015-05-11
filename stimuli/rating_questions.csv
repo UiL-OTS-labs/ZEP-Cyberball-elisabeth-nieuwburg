@@ -1,5 +1,8 @@
-###  Questions ###
-id;question;label1;label2;label3;label4;label5;label6;label7
-1;"Vraag1";label1;label2;label3;label4;label5;label6;label7
-2;"Vraag2";label1;label2;label3;label4;label5;label6;label7
-3;"Vraag3";label1;label2;label3;label4;label5;label6;label7
+###;;Questions;###;;;;;
+id;question;;;;;;;
+1;Ik voel me op dit moment:;heel slecht;redelijk slecht;een beetje slecht;niet slecht of goed;een beetje goed;redelijk goed;heel goed
+2;Ik voel me op dit moment:;heel boos;redelijk boos;een beetje boos;niet boos of rustig;een beetje rustig;redelijk rustig;heel rustig
+3;Ik voel me op dit moment:;heel verdrietig;redelijk verdrietig;een beetje verdrietig;niet verdrietig of blij;een beetje blij;redelijk blij;heel blij
+4;Ik voel me op dit moment:;heel afgewezen;redelijk afgewezen;een beetje afgewezen;niet afgewezen of geaccepteerd;een beetje geaccepteerd;redelijk geaccepteerd;heel geaccepteerd
+5;Hoe aardig vind je de andere spelers?;heel onaardig;redelijk onaardig;een beetje onaardig;niet onaardig of aardig;een beetje aardig;redelijk aardig;heel aardig
+6;Hoe aardig denk je dat de andere spelers jou vinden?;heel onaardig;redelijk onaardig;een beetje onaardig;niet onaardig of aardig;een beetje aardig;redelijk aardig;heel aardig
