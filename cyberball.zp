@@ -438,7 +438,7 @@ Experiment experiment
 		on_event:entry()
 		{
 			pause_page.fill_pattern_color = ENTRY_PAGE_COLOR;
-			pause_page.set_text(INSTRUCTION_ROUND3_TEXT, true);
+			pause_page.set_text(INSTRUCTION_ROUND3_TEXT[selected_group], true);
 			pause_page.action(this);
 		}
 	}

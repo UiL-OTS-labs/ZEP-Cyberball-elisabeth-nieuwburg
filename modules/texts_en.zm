@@ -57,8 +57,14 @@ const string	CONDITIONAL_INSTRUCTION_TEXT =
 "\n\nAch, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien. "
 "\n\nWe noemen dit een mantra. Probeer elke keer dat je de mantra tegen jezelf zegt, de betekenis goed tot je te laten doordringen.";
 
-const string	INSTRUCTION_ROUND3_TEXT = 
-"Instructie balspel\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
+string[..]	INSTRUCTION_ROUND3_TEXT = 
+{
+	"Instructie text for C, nooit gebruikt...", //C
+	"Instructie text for AC", // AC
+	"Instructie text for POSR", // POSR
+	"Instructie text for NEGR", //NEGR
+
+};
 
 const string	INSTRUCTION_RATING4_TEXT = 
 "Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
@@ -86,10 +92,10 @@ const string INSTRUCTION2_TEXT =
 
 string[..] CONDITIONAL_INSTRUCTION_TEXT1 =
 {
-	"Instructie text for C, nooit gebruikt...",
-	"Instructie text for AC",
-	"Instructie text for POSR",
-	"Instructie text for NEGR",
+	"Instructie text for C, nooit gebruikt...", //C
+	"Instructie text for AC", // AC
+	"Instructie text for POSR", // POSR
+	"Instructie text for NEGR", //NEGR
 
 };
 
