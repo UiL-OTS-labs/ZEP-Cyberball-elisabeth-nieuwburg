@@ -50,13 +50,6 @@ const string	INSTRUCTION_RATING3_TEXT =
 "Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
 "Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
 
-const string	CONDITIONAL_INSTRUCTION_TEXT = 
-"Instructie\n\nJe hebt gemerkt dat de andere spelers de bal niet altijd even vaak naar jou overspelen. Dit kan vervelend zijn. "
-"\n\nJe gaat zo meteen weer het balspel spelen, maar bij deze sessie krijg je een extra taak. "
-"Als de andere spelers de bal weer niet naar jou gooien, zeg je in je hoofd het volgende tegen jezelf: "
-"\n\nAch, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien. "
-"\n\nWe noemen dit een mantra. Probeer elke keer dat je de mantra tegen jezelf zegt, de betekenis goed tot je te laten doordringen.";
-
 string[..]	INSTRUCTION_ROUND3_TEXT = 
 {
 	"Instructie text for C, nooit gebruikt...", //C
