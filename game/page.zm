@@ -286,9 +286,6 @@ Page game_page
 	// actually makes a throw from one player to the next. Including logging it and setting up the animation.
 	time throw(Player from, Player to, time tref)
 	{
-			
-		send_trigger(tref, THROW_TRIGGERS[from][to], "Throw");
-
 		
 		// the next few lines generate a somewhat random throw parameters based on minimum and maximum settings.
 		real factor = real( random(10, int( (MINIMUM_TO_MAXIMUM_FACTOR-1) * 10 )))  / 10;
@@ -313,6 +310,8 @@ Page game_page
 					height, // height
 					tref+10ms //when to start the animation
 				); 
+
+		send_trigger(tref, THROW_TRIGGERS[from][to], "Throw");
 
 		if(from == TARGET_PLAYER_AFTER_SWITCH)
 			game_status.target_player_total_number_of_throws++;
