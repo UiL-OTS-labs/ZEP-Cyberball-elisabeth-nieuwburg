@@ -1,8 +1,8 @@
-###  woooot ###
+###;;woooot;###
 throw;group;text
-1; AC;"Instruction line 1. AC"
-2; AC;"Instruction line 2. AC"
-1; POSR;"Instruction line 1. POSR"
-2; POSR;"Instruction line 2. POSR"
-1; NEGR;"Instruction line 1. NEGR"
-2; NEGR;"Instruction line 2. NEGR"
+1;AC;Spreek hardop
+2;AC;""
+1;POSR;Spreek hardop
+2;POSR;""
+1;NEGR;Spreek hardop
+2;NEGR;""

@@ -1,4 +1,4 @@
-const dur TRIGGER_DURATION= 10ms;
+const dur TRIGGER_DURATION= 100ms;
 
 Trigger[..] trigger_log;
 
@@ -9,7 +9,7 @@ Timer trigger_sender
 		if(!SEND_TRIGGERS)
 			return;
 
-		control.button_box.output(1 << trigger_number);
+		control.button_box.output(trigger_number<<1);
 		println(" Firing trigger: " + trigger_number);
 		start(now()+TRIGGER_DURATION);
 	}

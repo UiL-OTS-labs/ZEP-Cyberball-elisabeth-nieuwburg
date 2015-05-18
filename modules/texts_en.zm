@@ -19,60 +19,85 @@ const string    WELCOME_TEXT                    = "Welkom!";
 const string 	INTRO_SCREEN_TEXT = "Druk op [Enter] om door te gaan.";
 
 const string INTRODUCTION_TEXT = 
-"Introductie\n\nWelkom!\n\nJe zult in dit experiment meerdere malen een balspel spelen, waarin je overgooit met drie andere spelers die te zien zijn op het scherm. "
+"<b>Introductie</b>\n\nWelkom!\n\nJe zult in dit experiment meerdere malen een balspel spelen, waarin je overgooit met drie andere spelers die te zien zijn op het scherm. "
 "Ook krijg je tussendoor steeds een aantal vragen die je moet beantwoorden.\n\nIn de instructies op het scherm zal duidelijk worden aangegeven wat je moet doen. "
 "Mocht je toch een vraag hebben, dan kun je die aan de proefleider stellen. Aan het einde van het experiment vragen we je nog een korte vragenlijst in te vullen. "
 "\n\nAlvast bedankt voor je deelname!";
 
 const string	INSTRUCTION_RATING1_TEXT = 
-"Instructie\n\nJe krijgt nu enkele vragen te zien. De vragen gaan over hoe jij je op dit moment voelt. "
-"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden.\n\nAntwoord geven doe je door ?????.";
+"<b>Instructie</b>\n\nDit is het einde van de oefensessie. De proefleider komt nu binnen zodat je de gelegenheid hebt om vragen te stellen. "
+"\n\nAls je verder geen vragen hebt, kan het experiment beginnen. Je krijgt nu enkele vragen te zien. De vragen gaan over hoe jij je op dit moment voelt. "
+"Probeer de vragen naar waarheid te beantwoorden.\n\nAntwoord geven doe je door te klikken met de muis. ";
 
 const string GLOVE_SELECTION_TEXT = 
-"Vul hieronder je naam in en kies vervolgens een handschoen.";
+"Vul hieronder je naam in en kies vervolgens een handschoen door erop te klikken met de muis.";
 
 const string	INSTRUCTION_PRACTICE_TEXT = 
-"Instructie oefensessie\n\nJe gaat nu het balspel spelen. We beginnen met een korte oefensessie om het spel te leren kennen. "
+"<b>Instructie oefensessie</b>\n\nJe gaat nu het balspel spelen. We beginnen met een korte oefensessie om het spel te leren kennen. "
 "\n\nJe kunt kiezen naar welke speler je de bal wilt overspelen door de pijltjestoetsen op het toetsenbord (naar links, naar boven en naar rechts) te gebruiken. "
 "Wanneer je één van de pijltjestoetsen indrukt, speel je de bal over naar een andere speler.";
 
 const string	INSTRUCTION_ROUND1_TEXT = 
-"Instructie balspel\n\nJe gaat nu het echte spel spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
+"<b>Instructie balspel</b>\n\nJe gaat nu het echte spel spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING2_TEXT = 
-"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
-"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
+"<b>Instructie</b>\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen naar waarheid te beantwoorden. Antwoord geven doe je door te klikken met de muis. ";
 
 const string	INSTRUCTION_ROUND2_TEXT = 
-"Instructie balspel\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
+"<b>Instructie balspel</b>\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING3_TEXT = 
-"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
-"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
+"<b>Instructie</b>\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen naar waarheid te beantwoorden. Antwoord geven doe je door te klikken met de muis. ";
+
+const string	CONDITIONAL_INSTRUCTION_TEXT = 
+"<b>Instructie</b>\n\nDEZE TEKST IS OVERBODIGJe hebt gemerkt dat de andere spelers de bal niet altijd even vaak naar jou overspelen. Dit kan vervelend zijn. "
+"\n\nJe gaat zo meteen weer het balspel spelen, maar bij deze sessie krijg je een extra taak. "
+"Als de andere spelers de bal weer niet naar jou gooien, zeg je in je hoofd het volgende tegen jezelf. "
+"\n\n<i>\"Ach, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien.\"</i> "
+"\n\nWe noemen dit een mantra. Probeer elke keer dat je de mantra tegen jezelf zegt, de betekenis goed tot je te laten doordringen.";
 
 string[..]	INSTRUCTION_ROUND3_TEXT = 
 {
-	"Instructie text for C, nooit gebruikt...", //C
-	"Instructie text for AC", // AC
-	"Instructie text for POSR", // POSR
-	"Instructie text for NEGR", //NEGR
+	"<b>Instructie balspel</b>\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.", //C
+	"<b>Instructie balspel</b>"
+    "\n\nDit is het einde van de oefensessie. De proefleider komt nu binnen zodat je de gelegenheid hebt om vragen te stellen. "
+    "\n\nAls je verder geen vragen hebt, ga je nu het echte spel spelen. "
+    "Hierbij zeg je elke keer dat de andere spelers de bal niet naar jou overgooien het zinnetje tegen jezelf in je hoofd. "
+    "\n\n<i>\"Tijdens het balspel wordt de bal overgegooid. De bal gaat van de ene naar de andere speler.\"</i>", // AC
+	"<b>Instructie balspel</b>"
+    "\n\nDit is het einde van de oefensessie. De proefleider komt nu binnen zodat je de gelegenheid hebt om vragen te stellen. "
+    "\n\nAls je verder geen vragen hebt, ga je nu het echte spel spelen. "
+    "Hierbij zeg je elke keer dat de andere spelers de bal niet naar jou overgooien de mantra tegen jezelf in je hoofd. "
+    "\n\n<i>\"Ach, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien.\"</i>"
+    "\n\nProbeer steeds als je de mantra zegt, de beketenis goed tot je te laten doordringen. ", // POSR
+	"<b>Instructie balspel</b>"
+    "\n\nDit is het einde van de oefensessie. De proefleider komt nu binnen zodat je de gelegenheid hebt om vragen te stellen. "
+    "\n\nAls je verder geen vragen hebt, ga je nu het echte spel spelen. "
+    "Hierbij zeg je elke keer dat de andere spelers de bal niet naar jou overgooien de mantra tegen jezelf in je hoofd. "
+    "\n\n<i>\"Ach, zij zijn toch maar vervelend en onaardig. Ik wil niet eens met hen samenspelen.\"</i>"
+    "\n\nProbeer steeds als je de mantra zegt, de beketenis goed tot je te laten doordringen. ", //NEGR
 
 };
 
 const string	INSTRUCTION_RATING4_TEXT = 
-"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
-"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
+"<b>Instructie</b>\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen naar waarheid te beantwoorden. Antwoord geven doe je door te klikken met de muis. ";
 
 const string	INSTRUCTION_ROUND4_TEXT = 
-"Instructie balspel\n\nJe gaat nu het balspel weer spelen. Dit keer speel je met andere spelers dan tijdens de eerdere spelletjes. "
+"<b>Instructie balspel</b>\n\nDe proefleider komt nu binnen voor uitleg. "
+"\n\nJe gaat nu het balspel weer spelen. Dit keer speel je met andere spelers dan tijdens de eerdere spelletjes. "
 "Gebruik de pijltjestoetsen om de bal over te spelen.";
 
 const string	INSTRUCTION_RATING5_TEXT = 
-"Instructie\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
-"Probeer de vragen zo goed mogelijk naar waarheid te beantwoorden. Antwoord geven doe je door ?????";
+"<b>Instructie</b>\n\nJe krijgt nu weer enkele vragen te zien over hoe jij je nu voelt. "
+"Probeer de vragen naar waarheid te beantwoorden. Antwoord geven doe je door te klikken met de muis.";
 
 const string    THANK_YOU_TEXT                  = 
-"Einde\n\nDit is het einde van het experiment. Laat de proefleider weten dat je klaar bent. Je krijgt dan instructies voor de laatste vragenlijst. "
+"Einde\n\nDit is het einde van het experiment. "
+"\nLaat de proefleider weten dat je klaar bent. "
+"\nJe krijgt dan instructies voor de laatste vragenlijst. "
 "\n\nBedankt voor je deelname!";
 
 const string INSTRUCTION_TEXT = 
@@ -85,18 +110,52 @@ const string INSTRUCTION2_TEXT =
 
 string[..] CONDITIONAL_INSTRUCTION_TEXT1 =
 {
-	"Instructie text for C, nooit gebruikt...", //C
-	"Instructie text for AC", // AC
-	"Instructie text for POSR", // POSR
-	"Instructie text for NEGR", //NEGR
+	"<b>Instructie balspel</b>\n\nJe gaat nu het balspel weer spelen.\n\nGebruik de pijltjestoetsen om de bal over te spelen.", //C
+	"<b>Instructie</b>\n\nJe hebt gemerkt dat de andere spelers de bal niet altijd even vaak naar jou overspelen. "
+    "\n\nJe gaat zo meteen weer het balspel spelen, maar bij deze sessie krijg je een extra taak. "
+    "Als de andere spelers de bal weer niet naar jou gooien, zeg je in je hoofd het volgende tegen jezelf: "
+    "\n\n<i>\"Tijdens het balspel wordt de bal overgegooid. De bal gaat van de ene naar de andere speler.\"</i> ", // AC
+	"<b>Instructie</b>\n\nJe hebt gemerkt dat de andere spelers de bal niet altijd even vaak naar jou overspelen. Dit kan vervelend zijn. "
+    "\n\nJe gaat zo meteen weer het balspel spelen, maar bij deze sessie krijg je een extra taak. "
+    "Als de andere spelers de bal weer niet naar jou gooien, zeg je in je hoofd het volgende tegen jezelf: "
+    "\n\n<i>\"Ach, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien.\"</i> "
+    "\n\nWe noemen dit een mantra. Probeer elke keer dat je de mantra tegen jezelf zegt, de betekenis goed tot je te laten doordringen.", // POSR
+	"<b>Instructie</b>\n\nJe hebt gemerkt dat de andere spelers de bal niet altijd even vaak naar jou overspelen. Dit kan vervelend zijn. "
+    "\n\nJe gaat zo meteen weer het balspel spelen, maar bij deze sessie krijg je een extra taak. "
+    "Als de andere spelers de bal weer niet naar jou gooien, zeg je in je hoofd het volgende tegen jezelf: "
+    "\n\n<i>\"Ach, zij zijn toch maar vervelend en onaardig. Ik wil niet eens met hen samenspelen.\"</i> "
+    "\n\nWe noemen dit een mantra. Probeer elke keer dat je de mantra tegen jezelf zegt, de betekenis goed tot je te laten doordringen.", //NEGR
 
 };
 
 string[..] CONDITIONAL_INSTRUCTION_TEXT2 =
 {
 	"Instructie text 2 for C, nooit gebruikt...",
-	"Instructie text 2 for AC",
-	"Instructie text 2 for POSR",
-	"Instructie text 2 for NEGR",
+	"<b>Instructie oefensessie</b>"
+    "\n\nJe gaat nu eerst oefenen met het zeggen van het zinnetje bij het spelen van het balspel."
+    "\n\n-   De eerste keer dat de bal niet naar jou gegooid wordt, verschijnt er \"Spreek hardop.\" in beeld. <b>Spreek het zinnetje hardop uit.</b> "
+    "\n-   Spreek de tweede keer dat de bal niet naar jou gegooid wordt, weer <b>hardop het zinnetje uit.</b> Er zal dit keer niets in beeld komen. "
+    "\n-   Bij de derde keer dat de bal niet naar jou gegooid wordt, zeg je het zinnetje <b>tegen jezelf in je hoofd.</b> Je spreekt het zinnetje dus niet hardop uit. "
+    "\n\nLees nu nog een keer aandachtig het zinnetje door, totdat je het hebt onthouden: "
+    "\n\n<i>\"Tijdens het balspel wordt de bal overgegooid. De bal gaat van de ene naar de andere speler.\"</i> "
+    "\n\nAls je de instructies begrepen hebt, druk dan op enter. Lees anders de instructies nogmaals door, of vraag de proefleider om uitleg als je iets niet begrijpt. ",
+
+    "<b>Instructie oefensessie</b>"
+    "\n\nJe gaat nu eerst oefenen met het toepassen van de mantra bij het spelen van het balspel."
+    "\n\n-   De eerste keer dat de bal niet naar jou gegooid wordt, verschijnt er \"Spreek hardop.\" in beeld. <b>Spreek de mantra hardop uit.</b> "
+    "\n-   Spreek de tweede keer dat de bal niet naar jou gegooid wordt, weer <b>hardop de mantra uit.</b> Er zal dit keer niets in beeld komen. "
+    "\n-   Bij de derde keer dat de bal niet naar jou gegooid wordt, zeg je de mantra <b>tegen jezelf in je hoofd.</b> Je spreekt de mantra dus niet hardop uit. "
+    "\n\nLees nu nog een keer aandachtig de mantra door, totdat je hem hebt onthouden: "
+    "\n\n<i>\"Ach, zij zijn vast al heel goed met elkaar bevriend. Het is niet zo erg dat ze de bal niet naar mij gooien.\"</i> "
+    "\n\nAls je de instructies begrepen hebt, druk dan op enter. Lees anders de instructies nogmaals door, of vraag de proefleider om uitleg als je iets niet begrijpt. ",
+	
+    "<b>Instructie oefensessie</b>"
+    "\n\nJe gaat nu eerst oefenen met het toepassen van de mantra bij het spelen van het balspel."
+    "\n\n-   De eerste keer dat de bal niet naar jou gegooid wordt, verschijnt er \"Spreek hardop.\" in beeld. <b>Spreek de mantra hardop uit.</b> "
+    "\n-   Spreek de tweede keer dat de bal niet naar jou gegooid wordt, weer <b>hardop de mantra uit.</b> Er zal dit keer niets in beeld komen. "
+    "\n-   Bij de derde keer dat de bal niet naar jou gegooid wordt, zeg je de mantra <b>tegen jezelf in je hoofd.</b> Je spreekt de mantra dus niet hardop uit. "
+    "\n\nLees nu nog een keer aandachtig de mantra door, totdat je hem hebt onthouden: "
+    "\n\n<i>\"Ach, zij zijn toch maar vervelend en onaardig. Ik wil niet eens met hen samenspelen.\"</i> "
+    "\n\nAls je de instructies begrepen hebt, druk dan op enter. Lees anders de instructies nogmaals door, of vraag de proefleider om uitleg als je iets niet begrijpt. ",          
 
 };
