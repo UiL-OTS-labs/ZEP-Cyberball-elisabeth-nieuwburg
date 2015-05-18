@@ -241,9 +241,6 @@ Page game_page
 	// reports and checks if we need to do anything regarding the status of the game, returns in the round should be stopped.
 	bool check_game_status()
 	{
-			string text = find_overlay_text_for_throw(game_status.total_number_of_throws);
-			graphic_layout.overlay_text(text);
-
 			bool round_is_finished = true;
 			if(a_switch_is_needed()) // init the switch!
 			{
@@ -303,7 +300,8 @@ Page game_page
 		tref = tref + 10ms;
 		send_trigger(tref, THROW_TRIGGERS[from][to], "Throw");
 		log_throw(from, to, tref);
-
+		at_ball_throw.start(tref);
+		
 		tref =  animator_throw.begin(
 					players_list[from].x, //x0
 					players_list[from].y, //y0
@@ -314,6 +312,8 @@ Page game_page
 					height, // height
 					tref//when to start the animation
 				); 
+
+		
 
 		if(from == TARGET_PLAYER_AFTER_SWITCH)
 			game_status.target_player_total_number_of_throws++;
@@ -332,6 +332,16 @@ Page game_page
 		return tref;
 	}
 	
+	Timer at_ball_throw 
+	{
+		expire() 
+		{
+		 	string text = find_overlay_text_for_throw(game_status.total_number_of_throws);
+			graphic_layout.overlay_text(text);
+
+		}
+
+	}
 	// used to change the owner of the ball at the time the ball actually arrives and not prior.
 	Timer at_arrival_ball { Player new_holder; expire() 
 		{ 
