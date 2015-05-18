@@ -299,7 +299,11 @@ Page game_page
 
 		tref = animator_glove.begin(from, pre_throw_duration, pre_throw_move, tref);
 		audio_throw.play(pre_throw_duration, throw_duration, tref); // it sounds better if the woosh is played right after the ball starts traveling
-		
+
+		tref = tref + 10ms;
+		send_trigger(tref, THROW_TRIGGERS[from][to], "Throw");
+		log_throw(from, to, tref);
+
 		tref =  animator_throw.begin(
 					players_list[from].x, //x0
 					players_list[from].y, //y0
@@ -308,10 +312,8 @@ Page game_page
 					throw_duration, //how long to throw
 					spins, // number of spins
 					height, // height
-					tref+10ms //when to start the animation
+					tref//when to start the animation
 				); 
-
-		send_trigger(tref, THROW_TRIGGERS[from][to], "Throw");
 
 		if(from == TARGET_PLAYER_AFTER_SWITCH)
 			game_status.target_player_total_number_of_throws++;
@@ -321,7 +323,7 @@ Page game_page
 
 		game_status.total_number_of_throws++;
 		control.set_status("Throw: " + game_status.total_number_of_throws);
-		log_throw(from, to, tref);
+		
 
 		// wait with the switch till until the ball has arrived.
 		at_arrival_ball.new_holder = to;
