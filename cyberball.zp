@@ -18,7 +18,7 @@ HISTORY:
 
 \******************************************************************************/
 
-requires 1.10;
+requires 1.12;
 
 //default (standard) modules
 import std_entry_page1;
