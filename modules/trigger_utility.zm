@@ -51,7 +51,7 @@ void reset_trigger_log()
 
 void setup_trigger_system()
 {
-	control.button_box.open();
+	control.button_box.open("/dev/ttyACM0");
 }
 
 void send_trigger(int trigger_number, string note = "")
